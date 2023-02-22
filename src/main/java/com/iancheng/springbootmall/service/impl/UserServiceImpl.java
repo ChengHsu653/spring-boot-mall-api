@@ -31,16 +31,17 @@ public class UserServiceImpl implements UserService {
     public Integer register(UserRegisterRequest userRegisterRequest) {
         User user = userDao.getUserByEmail(userRegisterRequest.getEmail());
 
-        // Check if email is registered
+        // 檢查註冊的 email
         if (user != null) {
-           log.warn("Email {} is already registered", userRegisterRequest.getEmail());
+           log.warn("該 email {} 已經被註冊", userRegisterRequest.getEmail());
            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
-        // Generate hashed password using MD5
+        // 使用 MD5 生成密碼的雜湊值
         String hashedPassword = DigestUtils.md5DigestAsHex(userRegisterRequest.getPassword().getBytes());
         userRegisterRequest.setPassword(hashedPassword);
 
+        // 創建帳號
         return userDao.createUser(userRegisterRequest);
     }
 
@@ -48,15 +49,16 @@ public class UserServiceImpl implements UserService {
     public User login(UserLoginRequest userLoginRequest) {
         User user = userDao.getUserByEmail(userLoginRequest.getEmail());
 
-        // Check if user is exist
+        // 檢查 user 是否存在
         if (user == null) {
-            log.warn("Email {} isn't registered", userLoginRequest.getEmail());
+            log.warn("該 email {} 尚未註冊", userLoginRequest.getEmail());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
-        // Generate hashed password using MD5
+        // 使用 MD5 生成密碼的雜湊值
         String hashedPassword = DigestUtils.md5DigestAsHex(userLoginRequest.getPassword().getBytes());
 
+        // 比較密碼
         if (user.getPassword().equals(hashedPassword)) return user;
         else {
             log.warn("Email {}'s password is wrong", userLoginRequest.getEmail());

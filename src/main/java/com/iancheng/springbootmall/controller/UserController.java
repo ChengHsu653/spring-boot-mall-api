@@ -31,6 +31,6 @@ public class UserController {
     public ResponseEntity<User> login(@RequestBody @Valid UserLoginRequest userLoginRequest) {
         User user = userService.login(userLoginRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 }

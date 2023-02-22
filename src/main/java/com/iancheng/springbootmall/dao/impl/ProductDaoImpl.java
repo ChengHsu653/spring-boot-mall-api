@@ -28,7 +28,7 @@ public class ProductDaoImpl implements ProductDao {
 
         var map = new HashMap<String, Object>();
 
-        // Filtering
+        // 查詢條件
         sql = addFilteringSql(sql, map, productQueryParams);
 
         Integer total = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
@@ -45,13 +45,13 @@ public class ProductDaoImpl implements ProductDao {
 
         var map = new HashMap<String, Object>();
 
-        // Filtering
+        // 查詢條件
         sql = addFilteringSql(sql, map, productQueryParams);
 
-        // Sorting
+        // 排序
         sql += " ORDER BY " + productQueryParams.getOrderBy() + " " + productQueryParams.getSort();
 
-        // Pagination
+        // 分頁
         sql += " LIMIT :limit OFFSET :offset";
         map.put("limit", productQueryParams.getLimit());
         map.put("offset", productQueryParams.getOffset());

@@ -29,7 +29,7 @@ public class ProductControllerTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    // Query product
+    // 查詢商品
     @Test
     public void getProduct_success() throws Exception {
         RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -57,7 +57,7 @@ public class ProductControllerTest {
                 .andExpect(status().is(404));
     }
 
-    // Build product
+    // 創建商品
     @Transactional
     @Test
     public void createProduct_success() throws Exception {
@@ -104,7 +104,7 @@ public class ProductControllerTest {
                 .andExpect(status().is(400));
     }
 
-    // Update product
+    // 更新商品
     @Transactional
     @Test
     public void updateProduct_success() throws Exception {
@@ -173,7 +173,7 @@ public class ProductControllerTest {
                 .andExpect(status().is(404));
     }
 
-    // Delete product
+    // 刪除商品
     @Transactional
     @Test
     public void deleteProduct_success() throws Exception {
@@ -194,7 +194,7 @@ public class ProductControllerTest {
                 .andExpect(status().is(204));
     }
 
-    // Query product list
+    // 查詢商品列表
     @Test
     public void getProducts() throws Exception {
         RequestBuilder requestBuilder = MockMvcRequestBuilders

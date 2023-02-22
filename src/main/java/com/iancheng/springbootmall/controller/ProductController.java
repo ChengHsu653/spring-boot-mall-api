@@ -26,15 +26,15 @@ public class ProductController {
 
     @GetMapping("/products")
     public ResponseEntity<Page<Product>> getProducts(
-            // Filtering
+            // 查詢條件 Filtering
             @RequestParam(required = false) ProductCategory category,
             @RequestParam(required = false) String search,
-    
-            // Sorting
+
+            // 排序 Sorting
             @RequestParam(defaultValue = "created_date") String orderBy,
             @RequestParam(defaultValue = "DESC") String sort,
 
-            // Pagination
+            // 分頁 Pagination
             @RequestParam(defaultValue = "5") @Max(1000) @Min(0) String limit,
             @RequestParam(defaultValue = "0") @Min(0) String offset
     ) {
@@ -46,13 +46,13 @@ public class ProductController {
         productQueryParams.setLimit(Integer.parseInt(limit));
         productQueryParams.setOffset(Integer.parseInt(offset));
 
-        // Get product list
+        // 取得 product list
         List<Product> productList = productService.getProducts(productQueryParams);
 
-        // Get product amount
+        // 取得 product 總數
         Integer total = productService.countProduct(productQueryParams);
 
-        // Pagination
+        // 分頁
         var page = new Page<Product>();
         page.setLimit(limit);
         page.setOffset(offset);
@@ -82,12 +82,12 @@ public class ProductController {
     @PutMapping("/products/{productId}")
     public ResponseEntity<Product> updateProduct(@PathVariable Integer productId,
                                                  @RequestBody @Valid ProductRequest productRequest) {
-        // check if product exist
+        // 檢查 product 是否存在
         Product product = productService.getProductById(productId);
 
         if (product == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
-        // update product data
+        // 修改商品的數據
         productService.updateProduct(productId, productRequest);
 
         Product updatedProduct = productService.getProductById(productId);
