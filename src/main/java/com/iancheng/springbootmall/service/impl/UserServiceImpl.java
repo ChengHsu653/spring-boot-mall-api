@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
         // 比較密碼
         if (user.getPassword().equals(hashedPassword)) return user;
         else {
-            log.warn("Email {}'s password is wrong", userLoginRequest.getEmail());
+            log.warn("email {} 的密碼不正確", userLoginRequest.getEmail());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
     }
