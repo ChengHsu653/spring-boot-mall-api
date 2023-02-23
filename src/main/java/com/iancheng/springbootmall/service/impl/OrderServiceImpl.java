@@ -4,6 +4,7 @@ import com.iancheng.springbootmall.dao.OrderDao;
 import com.iancheng.springbootmall.dao.ProductDao;
 import com.iancheng.springbootmall.dto.BuyItem;
 import com.iancheng.springbootmall.dto.CreateOrderRequest;
+import com.iancheng.springbootmall.model.Order;
 import com.iancheng.springbootmall.model.OrderItem;
 import com.iancheng.springbootmall.model.Product;
 import com.iancheng.springbootmall.service.OrderService;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class OrderServiceImpl implements OrderService {
@@ -22,6 +24,17 @@ public class OrderServiceImpl implements OrderService {
     
     @Autowired
     private ProductDao productDao;
+
+    @Override
+    public Order getOrderById(Integer orderId) {
+        Order order = orderDao.getOrderById(orderId);
+
+        List<OrderItem> orderItemList = orderDao.getOrderItemsByOrderId(orderId);
+
+        order.setOrderItemList(orderItemList);
+
+        return order;
+    }
 
     @Transactional
     @Override
@@ -34,7 +47,7 @@ public class OrderServiceImpl implements OrderService {
 
             // 計算總價錢
             BigDecimal amount = product.getPrice().multiply(BigDecimal.valueOf(buyItem.getQuantity()));
-            totalAmount.add(amount);
+            totalAmount = totalAmount.add(amount);
 
             // 轉換 BuyItem to OrderItem
             OrderItem orderItem = new OrderItem();

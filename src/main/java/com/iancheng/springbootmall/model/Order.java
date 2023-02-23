@@ -2,13 +2,17 @@ package com.iancheng.springbootmall.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 public class Order {
     private Integer orderId;
     private Integer userId;
     private BigDecimal totalAmount;
-    private Date createDate;
+    private Date createdDate;
     private Date lastModifiedDate;
+
+    private List<OrderItem> orderItemList;
+
 
     public Integer getOrderId() {
         return orderId;
@@ -34,12 +38,12 @@ public class Order {
         this.totalAmount = totalAmount;
     }
 
-    public Date getCreateDate() {
-        return createDate;
+    public Date getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    public void setCreatedDate(Date createDate) {
+        this.createdDate = createDate;
     }
 
     public Date getLastModifiedDate() {
@@ -48,5 +52,13 @@ public class Order {
 
     public void setLastModifiedDate(Date lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public List<OrderItem> getOrderItemList() {
+        return orderItemList;
+    }
+
+    public void setOrderItemList(List<OrderItem> orderItemList) {
+        this.orderItemList = orderItemList;
     }
 }
