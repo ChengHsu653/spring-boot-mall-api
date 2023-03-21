@@ -80,12 +80,15 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public void activateUser(User user) {
 		String sql = "UPDATE `user` " + 
-				     "SET role = :role " + 
+				     "SET role = :role, last_modified_date = :lastModifiedDate " + 
 				     "WHERE email = :email";
 		
 		var map = new HashMap<String, Object>();
         map.put("role", Role.MEMBER.toString());
         map.put("email", user.getEmail());
+        
+        Date now = new Date();
+        map.put("lastModifiedDate", now);
 
         namedParameterJdbcTemplate.update(sql, map);
 	}
