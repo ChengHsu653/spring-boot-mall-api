@@ -1,6 +1,7 @@
 package com.iancheng.springbootmall.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.iancheng.springbootmall.constant.Role;
 
 import java.util.Date;
 
@@ -13,7 +14,9 @@ public class User {
 
     private Date createdDate;
     private Date lastModifiedDate;
-
+    private Role role;
+    
+    
     public Integer getUserId() {
         return userId;
     }
@@ -53,4 +56,14 @@ public class User {
     public void setLastModifiedDate(Date lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+    
+    
 }

@@ -9,4 +9,6 @@ public interface UserDao {
     User getUserByEmail(String email);
 
     User getUserById(Integer userId);
+    
+    void activateUser(User user);
 }

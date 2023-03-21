@@ -4,6 +4,7 @@ package com.iancheng.springbootmall.service.impl;
 import com.iancheng.springbootmall.dao.UserDao;
 import com.iancheng.springbootmall.dto.UserLoginRequest;
 import com.iancheng.springbootmall.dto.UserRegisterRequest;
+import com.iancheng.springbootmall.dto.UserVerifyRequest;
 import com.iancheng.springbootmall.model.User;
 import com.iancheng.springbootmall.service.UserService;
 import org.slf4j.Logger;
@@ -65,4 +66,16 @@ public class UserServiceImpl implements UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
     }
+
+	@Override
+	public void verify(UserVerifyRequest userVerifyRequest) {
+		User user = userDao.getUserByEmail(userVerifyRequest.getEmail());
+
+        // 比較驗證碼
+        if (user.getPassword().equals(userVerifyRequest.getToken())) userDao.activateUser(user);
+        else {
+            log.warn("email {} 的驗證碼不正確", userVerifyRequest.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+	}
 }

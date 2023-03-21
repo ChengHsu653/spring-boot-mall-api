@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS `user`
     email              VARCHAR(256) NOT NULL UNIQUE,
     password           VARCHAR(256) NOT NULL,
     created_date       TIMESTAMP    NOT NULL,
-    last_modified_date TIMESTAMP    NOT NULL
+    last_modified_date TIMESTAMP    NOT NULL,
+    role               VARCHAR(256) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `order`

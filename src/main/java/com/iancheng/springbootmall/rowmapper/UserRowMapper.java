@@ -1,5 +1,6 @@
 package com.iancheng.springbootmall.rowmapper;
 
+import com.iancheng.springbootmall.constant.Role;
 import com.iancheng.springbootmall.model.User;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -15,7 +16,9 @@ public class UserRowMapper implements RowMapper<User> {
         user.setPassword(rs.getString("password"));
         user.setCreatedDate(rs.getTimestamp("created_date"));
         user.setLastModifiedDate(rs.getTimestamp("last_modified_date"));
-
+        
+        user.setRole(Role.valueOf(rs.getString("role")));
+        
         return user;
     }
 }

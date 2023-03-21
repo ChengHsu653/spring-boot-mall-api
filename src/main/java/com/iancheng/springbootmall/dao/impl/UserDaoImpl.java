@@ -1,5 +1,6 @@
 package com.iancheng.springbootmall.dao.impl;
 
+import com.iancheng.springbootmall.constant.Role;
 import com.iancheng.springbootmall.dao.UserDao;
 import com.iancheng.springbootmall.dto.UserRegisterRequest;
 import com.iancheng.springbootmall.model.User;
@@ -24,7 +25,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User getUserById(Integer userId) {
-        String sql = "SELECT user_id, email, password, created_date, last_modified_date " +
+        String sql = "SELECT user_id, email, password, created_date, last_modified_date, role " +
                      "FROM `user` " +
                      "WHERE user_id = :userId";
 
@@ -39,7 +40,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User getUserByEmail(String email) {
-        String sql = "SELECT user_id, email, password, created_date, last_modified_date " +
+        String sql = "SELECT user_id, email, password, created_date, last_modified_date, role " +
                      "FROM `user` " +
                      "WHERE email = :email";
 
@@ -54,8 +55,8 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Integer createUser(UserRegisterRequest userRegisterRequest) {
-        String sql = "INSERT INTO `user`(email, password, created_date, last_modified_date) " +
-                     "VALUES (:email, :password, :createdDate, :lastModifiedDate)";
+        String sql = "INSERT INTO `user`(email, password, created_date, last_modified_date, role) " +
+                     "VALUES (:email, :password, :createdDate, :lastModifiedDate, :role)";
 
         var map = new HashMap<String, Object>();
         map.put("email", userRegisterRequest.getEmail());
@@ -64,6 +65,8 @@ public class UserDaoImpl implements UserDao {
         Date now = new Date();
         map.put("createdDate", now);
         map.put("lastModifiedDate", now);
+        
+        map.put("role", Role.UNVERIFIED.toString());
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -73,6 +76,19 @@ public class UserDaoImpl implements UserDao {
 
         return userId;
     }
+
+	@Override
+	public void activateUser(User user) {
+		String sql = "UPDATE `user` " + 
+				     "SET role = :role " + 
+				     "WHERE email = :email";
+		
+		var map = new HashMap<String, Object>();
+        map.put("role", Role.MEMBER.toString());
+        map.put("email", user.getEmail());
+
+        namedParameterJdbcTemplate.update(sql, map);
+	}
 
 
 }
