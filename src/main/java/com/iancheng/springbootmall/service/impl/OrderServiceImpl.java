@@ -11,6 +11,10 @@ import com.iancheng.springbootmall.model.OrderItem;
 import com.iancheng.springbootmall.model.Product;
 import com.iancheng.springbootmall.model.User;
 import com.iancheng.springbootmall.service.OrderService;
+
+import ecpay.payment.integration.AllInOne;
+import ecpay.payment.integration.domain.AioCheckOutALL;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +24,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class OrderServiceImpl implements OrderService {
@@ -114,7 +122,48 @@ public class OrderServiceImpl implements OrderService {
         Integer orderId = orderDao.createOrder(userId, totalAmount);
 
         orderDao.createOrderItems(orderId, orderItemList);
-
+        
         return orderId;
     }
+
+	@Override
+	public String checkout(Integer orderId) {
+		Order order = orderDao.getOrderById(orderId);
+		var orderItems = orderDao.getOrderItemsByOrderId(orderId);
+		
+		AllInOne all = new AllInOne("");
+		
+		// 轉換為訂單格式
+		String uuId = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 20);
+		
+	    String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
+		String totalAmount = String.valueOf(order.getTotalAmount().intValue());
+		
+		StringBuilder itemsDetail = new StringBuilder();
+		
+		for (OrderItem orderItem: orderItems) {
+			Integer productId = orderItem.getProductId();
+			Product product = productDao.getProductById(productId);
+			
+			String productName = product.getProductName();
+			String quantity = String.valueOf(orderItem.getQuantity());
+			String amount = String.valueOf(orderItem.getAmount().intValue());
+			
+			itemsDetail.append(String.format("[%s * %s = %s]", productName, quantity, amount));
+		}
+    	
+		// 產生訂單
+		AioCheckOutALL obj = new AioCheckOutALL();
+		obj.setMerchantTradeNo(uuId);
+		obj.setMerchantTradeDate(now);
+		obj.setTotalAmount(totalAmount);		
+		obj.setTradeDesc(orderId.toString());
+		obj.setItemName(itemsDetail.toString());
+		obj.setReturnURL("http://localhost:8080");
+		obj.setNeedExtraPaidInfo("N");
+		
+		String form = all.aioCheckOut(obj, null);
+		
+		return form;
+	}
 }

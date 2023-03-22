@@ -6,6 +6,8 @@ import com.iancheng.springbootmall.dto.ProductRequest;
 import com.iancheng.springbootmall.model.Product;
 import com.iancheng.springbootmall.service.ProductService;
 import com.iancheng.springbootmall.util.Page;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -24,6 +26,7 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @Tag(name = "getProducts")
     @GetMapping("/products")
     public ResponseEntity<Page<Product>> getProducts(
             // 查詢條件 Filtering
@@ -62,6 +65,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
+    @Tag(name = "getProduct")
     @GetMapping("/products/{productId}")
     public ResponseEntity<Product> getProduct(@PathVariable Integer productId) {
         Product product = productService.getProductById(productId);
@@ -70,6 +74,7 @@ public class ProductController {
         else return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @Tag(name = "createProduct")
     @PostMapping("/products")
     public ResponseEntity<Product> createProduct(@RequestBody @Valid ProductRequest productRequest) {
         Integer productId = productService.createProduct(productRequest);
@@ -79,6 +84,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(product);
     }
 
+    @Tag(name = "updateProduct")
     @PutMapping("/products/{productId}")
     public ResponseEntity<Product> updateProduct(@PathVariable Integer productId,
                                                  @RequestBody @Valid ProductRequest productRequest) {
@@ -95,6 +101,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
     }
 
+    @Tag(name = "deleteProduct")
     @DeleteMapping("/products/{productId}")
     public ResponseEntity<?> deleteProduct(@PathVariable Integer productId) {
         productService.deleteProductById(productId);

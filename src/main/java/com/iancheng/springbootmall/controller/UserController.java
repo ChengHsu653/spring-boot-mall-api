@@ -6,6 +6,8 @@ import com.iancheng.springbootmall.dto.UserVerifyRequest;
 import com.iancheng.springbootmall.model.User;
 import com.iancheng.springbootmall.service.EmailService;
 import com.iancheng.springbootmall.service.UserService;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,7 @@ public class UserController {
     @Autowired
     private EmailService emailService;
 
+    @Tag(name = "register")
     @PostMapping("/users/register")
     public ResponseEntity<User> register(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
         Integer userId = userService.register(userRegisterRequest);
@@ -36,6 +39,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
+    @Tag(name = "login")
     @PostMapping("/users/login")
     public ResponseEntity<User> login(@RequestBody @Valid UserLoginRequest userLoginRequest) {
         User user = userService.login(userLoginRequest);
@@ -43,6 +47,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
     
+    @Tag(name = "verify")
     @GetMapping("/users/verify")
     public String verify(
     		@RequestParam String email,
