@@ -3,9 +3,22 @@ package com.iancheng.springbootmall.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.iancheng.springbootmall.constant.Role;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import java.util.Date;
 
+@Entity
+@Table(name = "`user`")
 public class User {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId;
     private String email;
 
@@ -14,6 +27,8 @@ public class User {
 
     private Date createdDate;
     private Date lastModifiedDate;
+    
+    @Enumerated(EnumType.STRING)
     private Role role;
     
     

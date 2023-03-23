@@ -4,13 +4,26 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+
+@Entity
+@Table(name = "`order`")
 public class Order {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer orderId;
     private Integer userId;
     private BigDecimal totalAmount;
     private Date createdDate;
     private Date lastModifiedDate;
 
+    @Transient
     private List<OrderItem> orderItemList;
 
 

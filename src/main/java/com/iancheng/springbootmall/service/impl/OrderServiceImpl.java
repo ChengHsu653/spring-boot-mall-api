@@ -129,18 +129,18 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public String checkout(Integer orderId) {
 		Order order = orderDao.getOrderById(orderId);
-		var orderItems = orderDao.getOrderItemsByOrderId(orderId);
 		
 		AllInOne all = new AllInOne("");
 		
 		// 轉換為訂單格式
 		String uuId = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 20);
-		
 	    String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
 		String totalAmount = String.valueOf(order.getTotalAmount().intValue());
 		
-		StringBuilder itemsDetail = new StringBuilder();
+		StringBuilder orderItemsDetail = new StringBuilder();
 		
+		List<OrderItem> orderItems = orderDao.getOrderItemsByOrderId(orderId);
+
 		for (OrderItem orderItem: orderItems) {
 			Integer productId = orderItem.getProductId();
 			Product product = productDao.getProductById(productId);
@@ -149,7 +149,7 @@ public class OrderServiceImpl implements OrderService {
 			String quantity = String.valueOf(orderItem.getQuantity());
 			String amount = String.valueOf(orderItem.getAmount().intValue());
 			
-			itemsDetail.append(String.format("[%s * %s = %s]", productName, quantity, amount));
+			orderItemsDetail.append(String.format("[%s * %s = %s]", productName, quantity, amount));
 		}
     	
 		// 產生訂單
@@ -158,7 +158,7 @@ public class OrderServiceImpl implements OrderService {
 		obj.setMerchantTradeDate(now);
 		obj.setTotalAmount(totalAmount);		
 		obj.setTradeDesc(orderId.toString());
-		obj.setItemName(itemsDetail.toString());
+		obj.setItemName(orderItemsDetail.toString());
 		obj.setReturnURL("http://localhost:8080");
 		obj.setNeedExtraPaidInfo("N");
 		

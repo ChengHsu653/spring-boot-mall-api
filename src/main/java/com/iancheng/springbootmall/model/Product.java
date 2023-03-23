@@ -1,13 +1,27 @@
 package com.iancheng.springbootmall.model;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.iancheng.springbootmall.constant.ProductCategory;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
+@Entity
 public class Product {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer productId;
     private String productName;
+    
+    @Enumerated(EnumType.STRING)
     private ProductCategory category;
     private String imageUrl;
     private BigDecimal price;

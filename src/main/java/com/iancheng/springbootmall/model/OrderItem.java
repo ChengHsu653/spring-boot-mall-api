@@ -2,13 +2,26 @@ package com.iancheng.springbootmall.model;
 
 import java.math.BigDecimal;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
+
+@Entity
 public class OrderItem {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer orderItemId;
     private Integer orderId;
     private Integer productId;
     private Integer quantity;
     private BigDecimal amount;
+    
+    @Transient
     private String productName;
+    @Transient
     private String imageUrl;
 
     public Integer getOrderItemId() {
