@@ -26,6 +26,7 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+    
 
     @Tag(name = "getProducts")
     @GetMapping("/products")
@@ -68,7 +69,9 @@ public class ProductController {
 
     @Tag(name = "getProduct")
     @GetMapping("/products/{productId}")
-    public ResponseEntity<Product> getProduct(@PathVariable Integer productId) {
+    public ResponseEntity<Product> getProduct(
+    		@PathVariable Integer productId
+    ) {
         Product product = productService.getProductById(productId);
 
         if (product != null) return ResponseEntity.status(HttpStatus.OK).body(product);
@@ -77,10 +80,10 @@ public class ProductController {
 
     @Tag(name = "createProduct")
     @PostMapping("/products")
-    public ResponseEntity<Product> createProduct(@RequestBody @Valid ProductRequest productRequest) {
-        Integer productId = productService.createProduct(productRequest);
-
-        Product product = productService.getProductById(productId);
+    public ResponseEntity<Product> createProduct(
+    		@RequestBody @Valid ProductRequest productRequest
+    ) {
+    	Product product = productService.createProduct(productRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(product);
     }
