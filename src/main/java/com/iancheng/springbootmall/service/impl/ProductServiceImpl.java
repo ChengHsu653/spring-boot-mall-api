@@ -88,13 +88,11 @@ public class ProductServiceImpl implements ProductService {
             product.setStock(productRequest.getStock());
             product.setDescription(productRequest.getDescription());
             
-//            productRepository.updateProduct(product);
+            productRepository.save(product);
         } else {
         	log.warn("該商品 id: {} 不存在", productId);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-    	
-        productDao.updateProduct(productId, productRequest);
     }
 
     @Override
