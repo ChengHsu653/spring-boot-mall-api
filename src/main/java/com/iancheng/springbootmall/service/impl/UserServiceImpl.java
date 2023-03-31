@@ -22,6 +22,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDao userDao;
+    
+    
 
     @Override
     public User getUserById(Integer userId) {
@@ -31,7 +33,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Integer register(UserRegisterRequest userRegisterRequest) {
         User user = userDao.getUserByEmail(userRegisterRequest.getEmail());
-
+    	
         // 檢查註冊的 email
         if (user != null) {
            log.warn("該 email {} 已經被註冊", userRegisterRequest.getEmail());
