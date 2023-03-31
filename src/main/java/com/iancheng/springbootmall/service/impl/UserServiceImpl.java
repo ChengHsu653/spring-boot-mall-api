@@ -1,21 +1,28 @@
 package com.iancheng.springbootmall.service.impl;
 
 
+import com.iancheng.springbootmall.constant.Role;
 import com.iancheng.springbootmall.dao.UserDao;
 import com.iancheng.springbootmall.dto.UserLoginRequest;
 import com.iancheng.springbootmall.dto.UserRegisterRequest;
 import com.iancheng.springbootmall.dto.UserVerifyRequest;
 import com.iancheng.springbootmall.model.User;
+import com.iancheng.springbootmall.repository.UserRepository;
 import com.iancheng.springbootmall.service.UserService;
+
+import java.time.Instant;
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.server.ResponseStatusException;
 
-@Component
+@Service
 public class UserServiceImpl implements UserService {
 
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
@@ -23,16 +30,18 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
     
+    @Autowired
+    private UserRepository userRepository;
     
 
-    @Override
+	@Override
     public User getUserById(Integer userId) {
         return userDao.getUserById(userId);
     }
 
     @Override
-    public Integer register(UserRegisterRequest userRegisterRequest) {
-        User user = userDao.getUserByEmail(userRegisterRequest.getEmail());
+    public User register(UserRegisterRequest userRegisterRequest) {
+    	User user = userRepository.getUserByEmail(userRegisterRequest.getEmail());
     	
         // 檢查註冊的 email
         if (user != null) {
@@ -45,16 +54,29 @@ public class UserServiceImpl implements UserService {
         userRegisterRequest.setPassword(hashedPassword);
 
         // 創建帳號
-        return userDao.createUser(userRegisterRequest);
+        user = new User();
+        
+        Date now = new Date();
+        
+        user.setEmail(userRegisterRequest.getEmail());
+        user.setPassword(userRegisterRequest.getPassword());
+        user.setUserName(userRegisterRequest.getUserName());
+        user.setCreatedDate(now);
+        user.setLastModifiedDate(now);
+        user.setRole(Role.UNVERIFIED);
+        
+        user = userRepository.save(user);
+        
+        return user;
     }
 
     @Override
     public User login(UserLoginRequest userLoginRequest) {
-        User user = userDao.getUserByEmail(userLoginRequest.getEmail());
-
+    	User user = userRepository.getUserByEmail(userLoginRequest.getEmail());
+    	
         // 檢查 user 是否存在
         if (user == null) {
-            log.warn("該 email {} 尚未註冊", userLoginRequest.getEmail());
+            log.warn("該 Email {} 尚未註冊", userLoginRequest.getEmail());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
@@ -64,15 +86,15 @@ public class UserServiceImpl implements UserService {
         // 比較密碼
         if (user.getPassword().equals(hashedPassword)) return user;
         else {
-            log.warn("email {} 的密碼不正確", userLoginRequest.getEmail());
+            log.warn("Email {} 的密碼不正確", userLoginRequest.getEmail());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
     }
 
 	@Override
 	public void verify(UserVerifyRequest userVerifyRequest) {
-		User user = userDao.getUserByEmail(userVerifyRequest.getEmail());
-
+		User user = userRepository.getUserByEmail(userVerifyRequest.getEmail());
+    	
         // 比較驗證碼
         if (user.getPassword().equals(userVerifyRequest.getToken())) userDao.activateUser(user);
         else {

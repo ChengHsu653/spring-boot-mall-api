@@ -6,11 +6,12 @@ import com.iancheng.springbootmall.dto.UserVerifyRequest;
 import com.iancheng.springbootmall.model.User;
 
 public interface UserService {
-    User getUserById(Integer userId);
+	User register(UserRegisterRequest userRegisterRequest);
 
-    Integer register(UserRegisterRequest userRegisterRequest);
+	User login(UserLoginRequest userLoginRequest);
 
-    User login(UserLoginRequest userLoginRequest);
+	void verify(UserVerifyRequest userVerifyRequest);
     
-    void verify(UserVerifyRequest userVerifyRequest);
+	User getUserById(Integer userId);
+
 }

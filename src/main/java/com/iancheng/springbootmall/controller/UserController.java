@@ -9,6 +9,7 @@ import com.iancheng.springbootmall.service.UserService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,13 +30,14 @@ public class UserController {
     @Autowired
     private EmailService emailService;
 
+    
     @Tag(name = "register")
     @PostMapping("/users/register")
-    public ResponseEntity<User> register(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
-        Integer userId = userService.register(userRegisterRequest);
-
-        User user = userService.getUserById(userId);
-        
+    public ResponseEntity<User> register(
+    		@RequestBody @Valid UserRegisterRequest userRegisterRequest
+    ) {
+    	User user = userService.register(userRegisterRequest);
+   	       
         emailService.sendValidationLink(user);
         
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
@@ -43,7 +45,9 @@ public class UserController {
 
     @Tag(name = "login")
     @PostMapping("/users/login")
-    public ResponseEntity<User> login(@RequestBody @Valid UserLoginRequest userLoginRequest) {
+    public ResponseEntity<User> login(
+    		@RequestBody @Valid UserLoginRequest userLoginRequest
+    ) {
         User user = userService.login(userLoginRequest);
 
         return ResponseEntity.status(HttpStatus.OK).body(user);

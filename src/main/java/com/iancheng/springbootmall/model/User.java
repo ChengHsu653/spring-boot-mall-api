@@ -24,8 +24,9 @@ public class User {
 
     @JsonIgnore
     private String password;
+    private String userName;
 
-    private Date createdDate;
+	private Date createdDate;
     private Date lastModifiedDate;
     
     @Enumerated(EnumType.STRING)
@@ -79,6 +80,14 @@ public class User {
 	public void setRole(Role role) {
 		this.role = role;
 	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
     
-    
+	
 }
