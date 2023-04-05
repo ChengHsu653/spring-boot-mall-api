@@ -3,8 +3,8 @@ package com.iancheng.springbootmall.dto;
 public class OrderQueryParams {
 
     private Integer userId;
-    private Integer limit;
-    private Integer offset;
+    private Integer size;
+    private Integer page;
 
     public Integer getUserId() {
         return userId;
@@ -14,19 +14,21 @@ public class OrderQueryParams {
         this.userId = userId;
     }
 
-    public Integer getLimit() {
-        return limit;
-    }
+	public Integer getSize() {
+		return size;
+	}
 
-    public void setLimit(Integer limit) {
-        this.limit = limit;
-    }
+	public void setSize(Integer size) {
+		this.size = size;
+	}
 
-    public Integer getOffset() {
-        return offset;
-    }
+	public Integer getPage() {
+		return page;
+	}
 
-    public void setOffset(Integer offset) {
-        this.offset = offset;
-    }
+	public void setPage(Integer page) {
+		this.page = page;
+	}
+
+    
 }

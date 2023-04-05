@@ -1,6 +1,6 @@
 package com.iancheng.springbootmall.service.impl;
 
-import com.iancheng.springbootmall.dao.ProductDao;
+import com.iancheng.springbootmall.constant.ProductCategory;
 import com.iancheng.springbootmall.dto.ProductQueryParams;
 import com.iancheng.springbootmall.dto.ProductRequest;
 import com.iancheng.springbootmall.model.Product;
@@ -10,33 +10,49 @@ import com.iancheng.springbootmall.service.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
 	private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
-	
-    @Autowired
-    private ProductDao productDao;
-    
+	 
     @Autowired
     private ProductRepository productRepository;
 
+    
     @Override
-    public Integer countProduct(ProductQueryParams productQueryParams) {
-        return productDao.countProduct(productQueryParams);
-    }
-
-    @Override
-    public List<Product> getProducts(ProductQueryParams productQueryParams) {
-        return productDao.getProducts(productQueryParams);
+    public Page<Product> getProducts(ProductQueryParams productQueryParams) {   	
+    	Sort sort = Sort.by(productQueryParams.getOrderBy());
+    	
+    	Pageable pageable = PageRequest.of(
+    			productQueryParams.getPage(),
+    			productQueryParams.getSize(),
+    			sort
+    	);
+    	
+    	ProductCategory category = productQueryParams.getCategory();
+    	
+    	String search = productQueryParams.getSearch();
+    	
+    	if (category != null && search != null) {
+    		return productRepository.findAllByProductNameContainingAndCategory(search, category, pageable);
+    	} else if (search != null) {
+    		return productRepository.findAllByProductNameContaining(search, pageable);
+    	} else if (category != null) {
+    		return productRepository.findAllByCategory(category, pageable);
+    	} else {
+    		return productRepository.findAll(pageable);
+    	}
     }
 
     @Override

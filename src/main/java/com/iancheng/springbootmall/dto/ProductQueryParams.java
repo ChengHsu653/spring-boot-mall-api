@@ -12,9 +12,9 @@ public class ProductQueryParams {
 
     private String sort;
 
-    private Integer limit;
+    private Integer size;
 
-    private Integer offset;
+    private Integer page;
 
     public ProductCategory getCategory() {
         return category;
@@ -48,19 +48,21 @@ public class ProductQueryParams {
         this.sort = sort;
     }
 
-    public Integer getLimit() {
-        return limit;
-    }
+	public Integer getSize() {
+		return size;
+	}
 
-    public void setLimit(Integer limit) {
-        this.limit = limit;
-    }
+	public void setSize(Integer size) {
+		this.size = size;
+	}
 
-    public Integer getOffset() {
-        return offset;
-    }
+	public Integer getPage() {
+		return page;
+	}
 
-    public void setOffset(Integer offset) {
-        this.offset = offset;
-    }
+	public void setPage(Integer page) {
+		this.page = page;
+	}
+
+    
 }

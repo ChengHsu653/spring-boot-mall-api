@@ -1,10 +1,11 @@
 package com.iancheng.springbootmall.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.iancheng.springbootmall.dao.UserDao;
 import com.iancheng.springbootmall.dto.UserLoginRequest;
 import com.iancheng.springbootmall.dto.UserRegisterRequest;
 import com.iancheng.springbootmall.model.User;
+import com.iancheng.springbootmall.repository.UserRepository;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -28,7 +29,7 @@ public class UserControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private UserDao userDao;
+    private UserRepository userRepository;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -54,7 +55,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.lastModifiedDate", notNullValue()));
 
         // 檢查資料庫中的密碼不為明碼
-        User user = userDao.getUserByEmail(userRegisterRequest.getEmail());
+        User user = userRepository.getUserByEmail(userRegisterRequest.getEmail());
         assertNotEquals(userRegisterRequest.getPassword(), user.getPassword());
     }
 

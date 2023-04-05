@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS `user`
     password           VARCHAR(256) NOT NULL,
     created_date       TIMESTAMP    NOT NULL,
     last_modified_date TIMESTAMP    NOT NULL,
-    role               VARCHAR(256) NOT NULL
+    role               VARCHAR(256) NOT NULL,
+	user_name          VARCHAR(256) NOT NULL,
 );
 
 CREATE TABLE IF NOT EXISTS `order`

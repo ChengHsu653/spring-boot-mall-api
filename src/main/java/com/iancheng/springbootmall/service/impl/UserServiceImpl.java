@@ -2,7 +2,6 @@ package com.iancheng.springbootmall.service.impl;
 
 
 import com.iancheng.springbootmall.constant.Role;
-import com.iancheng.springbootmall.dao.UserDao;
 import com.iancheng.springbootmall.dto.UserLoginRequest;
 import com.iancheng.springbootmall.dto.UserRegisterRequest;
 import com.iancheng.springbootmall.dto.UserVerifyRequest;
@@ -10,14 +9,12 @@ import com.iancheng.springbootmall.model.User;
 import com.iancheng.springbootmall.repository.UserRepository;
 import com.iancheng.springbootmall.service.UserService;
 
-import java.time.Instant;
 import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.server.ResponseStatusException;
@@ -26,18 +23,10 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserServiceImpl implements UserService {
 
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
-
-    @Autowired
-    private UserDao userDao;
-    
+ 
     @Autowired
     private UserRepository userRepository;
     
-
-	@Override
-    public User getUserById(Integer userId) {
-        return userDao.getUserById(userId);
-    }
 
     @Override
     public User register(UserRegisterRequest userRegisterRequest) {
@@ -84,8 +73,9 @@ public class UserServiceImpl implements UserService {
         String hashedPassword = DigestUtils.md5DigestAsHex(userLoginRequest.getPassword().getBytes());
 
         // 比較密碼
-        if (user.getPassword().equals(hashedPassword)) return user;
-        else {
+        if (user.getPassword().equals(hashedPassword)) {
+        	return user;
+        } else {
             log.warn("Email {} 的密碼不正確", userLoginRequest.getEmail());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
@@ -96,8 +86,10 @@ public class UserServiceImpl implements UserService {
 		User user = userRepository.getUserByEmail(userVerifyRequest.getEmail());
     	
         // 比較驗證碼
-        if (user.getPassword().equals(userVerifyRequest.getToken())) userDao.activateUser(user);
-        else {
+        if (user.getPassword().equals(userVerifyRequest.getToken())) {
+        	user.setRole(Role.MEMBER);
+        	user = userRepository.save(user);
+        } else {
             log.warn("email {} 的驗證碼不正確", userVerifyRequest.getEmail());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }

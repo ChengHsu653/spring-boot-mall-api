@@ -6,12 +6,12 @@ import com.iancheng.springbootmall.model.Product;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 public interface ProductService {
 	Product createProduct(ProductRequest productRequest);
 
-	Integer countProduct(ProductQueryParams productQueryParams);
-    
-    List<Product> getProducts(ProductQueryParams productQueryParams);
+	Page<Product> getProducts(ProductQueryParams productQueryParams);
     
     Product getProductById(Integer productId);
     

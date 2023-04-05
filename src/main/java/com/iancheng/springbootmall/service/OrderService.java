@@ -6,15 +6,15 @@ import com.iancheng.springbootmall.model.Order;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 public interface OrderService {
 
-    List<Order> getOrders(OrderQueryParams orderQueryParams);
-
-    Integer countOrder(OrderQueryParams orderQueryParams);
+    Page<Order> getOrders(OrderQueryParams orderQueryParams);
 
     Order getOrderById(Integer orderId);
 
     Integer createOrder(Integer userId, CreateOrderRequest createOrderRequest);
 
-	String checkout(Integer orderId);
+	String checkout(Integer userId, Integer orderId);
 }

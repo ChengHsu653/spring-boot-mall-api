@@ -5,19 +5,18 @@ import com.iancheng.springbootmall.dto.ProductQueryParams;
 import com.iancheng.springbootmall.dto.ProductRequest;
 import com.iancheng.springbootmall.model.Product;
 import com.iancheng.springbootmall.service.ProductService;
-import com.iancheng.springbootmall.util.Page;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @Validated
 @RestController
@@ -36,35 +35,25 @@ public class ProductController {
             @RequestParam(required = false) String search,
 
             // 排序 Sorting
-            @RequestParam(defaultValue = "created_date") String orderBy,
+            @RequestParam(defaultValue = "createdDate") String orderBy,
             @RequestParam(defaultValue = "DESC") String sort,
 
             // 分頁 Pagination
-            @RequestParam(defaultValue = "5") @Max(1000) @Min(0) Integer limit,
-            @RequestParam(defaultValue = "0") @Min(0) Integer offset
+            @RequestParam(defaultValue = "5") @Max(1000) @Min(0) Integer size,
+            @RequestParam(defaultValue = "0") @Min(0) Integer page
     ) {
         ProductQueryParams productQueryParams = new ProductQueryParams();
         productQueryParams.setCategory(category);
         productQueryParams.setSearch(search);
         productQueryParams.setOrderBy(orderBy);
         productQueryParams.setSort(sort);
-        productQueryParams.setLimit(limit);
-        productQueryParams.setOffset(offset);
+        productQueryParams.setSize(size);
+        productQueryParams.setPage(page - 1 < 0 ? 0 : page - 1);
 
-        // 取得 product list
-        List<Product> productList = productService.getProducts(productQueryParams);
+        // 取得 product list 分頁
+        Page<Product> productListPageDetail = productService.getProducts(productQueryParams);
 
-        // 取得 product 總數
-        Integer total = productService.countProduct(productQueryParams);
-
-        // 分頁
-        var page = new Page<Product>();
-        page.setLimit(limit);
-        page.setOffset(offset);
-        page.setTotal(total);
-        page.setResults(productList);
-
-        return ResponseEntity.status(HttpStatus.OK).body(page);
+        return ResponseEntity.status(HttpStatus.OK).body(productListPageDetail);
     }
 
     @Tag(name = "getProduct")
@@ -90,8 +79,10 @@ public class ProductController {
 
     @Tag(name = "updateProduct")
     @PutMapping("/products/{productId}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Integer productId,
-                                                 @RequestBody @Valid ProductRequest productRequest) {
+    public ResponseEntity<Product> updateProduct(
+    		@PathVariable Integer productId,
+            @RequestBody @Valid ProductRequest productRequest
+    ) {
         // 檢查 product 是否存在
         Product product = productService.getProductById(productId);
 

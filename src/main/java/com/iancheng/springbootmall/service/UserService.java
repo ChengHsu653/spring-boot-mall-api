@@ -12,6 +12,4 @@ public interface UserService {
 
 	void verify(UserVerifyRequest userVerifyRequest);
     
-	User getUserById(Integer userId);
-
 }
