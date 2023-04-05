@@ -1,0 +1,420 @@
+{
+  "version": 6,
+  "entities": [
+    {
+      "entity": {
+        "type": "Project",
+        "id": "5d6d900d-b58a-4b82-a5e6-17928b32914e",
+        "name": "springboot-mall"
+      },
+      "children": [
+        {
+          "entity": {
+            "type": "Service",
+            "id": "9de3824f-e125-4ad5-906a-33cebb4cf43c",
+            "name": "商品功能"
+          },
+          "children": [
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+                  "name": "POST"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
+                  "textBody": "{\n  \"productName\":\"Toyota\",\n  \"category\":\"FOOD\",\n  \"imageUrl\":\"https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80\",\n  \"price\":1000,\n  \"stock\":100\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "localhost:8080",
+                  "path": "/products"
+                },
+                "id": "af254338-4cd7-4dab-9e1c-e698388eef89",
+                "name": "createProduct",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.5",
+                  "name": "DELETE"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "localhost:8080",
+                  "path": "/products/3"
+                },
+                "id": "bdecf098-f54d-48cb-a369-a207fe739bad",
+                "name": "deleteProduct",
+                "headers": []
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "localhost:8080",
+                  "path": "/products/20"
+                },
+                "id": "b934beee-f874-483c-bf16-3696c29c556b",
+                "name": "getProduct",
+                "headers": []
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
+                  "textBody": "{\"limit\":5,\"offset\":0,\"total\":8,\"results\":[{\"productId\":11,\"productName\":\"Test1\",\"category\":\"CAR\",\"imageUrl\":\"https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80\",\"price\":1000,\"stock\":100,\"description\":null,\"createdDate\":\"2022-09-06 02:48:52\",\"lastModifiedDate\":\"2022-09-06 02:48:52\"},{\"productId\":10,\"productName\":\"Tesla\",\"category\":\"CAR\",\"imageUrl\":\"https://cdn.pixabay.com/photo/2021/01/15/16/49/tesla-5919764_1280.jpg\",\"price\":450000,\"stock\":3,\"description\":\"世界最暢銷的充電式汽車\",\"createdDate\":\"2022-03-21 23:30:00\",\"lastModifiedDate\":\"2022-09-05 00:46:03\"},{\"productId\":9,\"productName\":\"Benz\",\"category\":\"CAR\",\"imageUrl\":\"https://cdn.pixabay.com/photo/2017/03/27/14/56/auto-2179220_1280.jpg\",\"price\":600000,\"stock\":1,\"description\":null,\"createdDate\":\"2022-03-21 20:10:00\",\"lastModifiedDate\":\"2022-09-05 00:46:03\"},{\"productId\":8,\"productName\":\"BMW\",\"category\":\"CAR\",\"imageUrl\":\"https://cdn.pixabay.com/photo/2018/02/21/03/15/bmw-m4-3169357_1280.jpg\",\"price\":500000,\"stock\":3,\"description\":\"渦輪增壓，直列4缸，DOHC雙凸輪軸，16氣門\",\"createdDate\":\"2022-03-20 12:30:00\",\"lastModifiedDate\":\"2022-03-20 12:30:00\"},{\"productId\":7,\"productName\":\"Toyota\",\"category\":\"CAR\",\"imageUrl\":\"https://cdn.pixabay.com/photo/2014/05/18/19/13/toyota-347288_1280.jpg\",\"price\":100000,\"stock\":5,\"description\":null,\"createdDate\":\"2022-03-20 09:20:00\",\"lastModifiedDate\":\"2022-03-20 09:20:00\"}]}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": [
+                      {
+                        "enabled": true,
+                        "name": "search",
+                        "value": "t"
+                      },
+                      {
+                        "enabled": true,
+                        "name": "page",
+                        "value": "3"
+                      }
+                    ]
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "localhost:8080",
+                  "path": "/products"
+                },
+                "id": "b52b401f-0533-489e-86d0-96aa61dce73e",
+                "name": "getProducts",
+                "headers": []
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
+                  "name": "PUT"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
+                  "textBody": "{\n  \"productName\":\"Toyota (修改後)\",\n  \"category\":\"CAR\",\n  \"imageUrl\":\"https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80\",\n  \"price\":1.2,\n  \"stock\":100\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "localhost:8080",
+                  "path": "/products/3"
+                },
+                "id": "449d6db4-4cdd-49c7-b8ba-431bdf6d05a8",
+                "name": "updateProduct",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "application/json"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "entity": {
+            "type": "Service",
+            "id": "4e1b6727-48c9-45e3-8f5f-91b163a8434e",
+            "name": "帳號功能"
+          },
+          "children": [
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+                  "name": "POST"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
+                  "textBody": "{\n  \"email\":\"dunz.zheng@gmail.com\",\n  \"password\":\"123456\"\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "localhost:8080",
+                  "path": "/users/login"
+                },
+                "id": "8159dac9-4c17-4401-b215-66523e07c5d8",
+                "name": "login",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+                  "name": "POST"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
+                  "textBody": "{\n  \"email\":\"dunz.zheng@gmail.com\",\n  \"password\":\"123456\",\n  \"userName\":\"Ian\"\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "localhost:8080",
+                  "path": "/users/register"
+                },
+                "id": "8d99897b-9abb-4136-bf09-78809196989e",
+                "name": "register",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "application/json"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "entity": {
+            "type": "Service",
+            "id": "44d65410-8125-419e-b414-800b7aa3de91",
+            "name": "訂單功能"
+          },
+          "children": [
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+                  "name": "POST"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "localhost:8080",
+                  "path": "/users/1/7"
+                },
+                "id": "eb566ddc-c091-40c7-be4a-3696894b8283",
+                "name": "checkOut",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+                  "name": "POST"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
+                  "textBody": "{\n  \"buyItemList\":[\n    {\n      \"productId\":7,\n      \"quantity\":10\n    },\n    {\n      \"productId\":8,\n      \"quantity\":10\n    }\n  ]\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "localhost:8080",
+                  "path": "/users/1/orders"
+                },
+                "id": "ac638daa-bb0e-4f88-87d3-830f94fe2c69",
+                "name": "createOrder",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "localhost:8080",
+                  "path": "/users/1/orders"
+                },
+                "id": "f161fd20-9b47-408a-8ff1-ad3a180876eb",
+                "name": "getOrders",
+                "headers": []
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
