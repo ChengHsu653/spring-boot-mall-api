@@ -32,12 +32,11 @@ public class ProductServiceImpl implements ProductService {
     
     @Override
     public Page<Product> getProducts(ProductQueryParams productQueryParams) {   	
-    	Sort sort = Sort.by(productQueryParams.getOrderBy());
     	
     	Pageable pageable = PageRequest.of(
     			productQueryParams.getPage(),
     			productQueryParams.getSize(),
-    			sort
+    			Sort.by(productQueryParams.getOrderBy())
     	);
     	
     	ProductCategory category = productQueryParams.getCategory();

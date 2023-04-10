@@ -2,6 +2,7 @@ package com.iancheng.springbootmall.service;
 
 import com.iancheng.springbootmall.dto.UserLoginRequest;
 import com.iancheng.springbootmall.dto.UserRegisterRequest;
+import com.iancheng.springbootmall.dto.UserResetPasswordRequest;
 import com.iancheng.springbootmall.dto.UserVerifyRequest;
 import com.iancheng.springbootmall.model.User;
 
@@ -11,5 +12,9 @@ public interface UserService {
 	User login(UserLoginRequest userLoginRequest);
 
 	void verify(UserVerifyRequest userVerifyRequest);
+
+	User checkIfUserExist(String email);
+
+	void resetPassword(UserResetPasswordRequest userResetPasswordRequest);
     
 }

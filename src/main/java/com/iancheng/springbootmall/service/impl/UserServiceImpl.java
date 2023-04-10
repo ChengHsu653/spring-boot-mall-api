@@ -4,10 +4,13 @@ package com.iancheng.springbootmall.service.impl;
 import com.iancheng.springbootmall.constant.Role;
 import com.iancheng.springbootmall.dto.UserLoginRequest;
 import com.iancheng.springbootmall.dto.UserRegisterRequest;
+import com.iancheng.springbootmall.dto.UserResetPasswordRequest;
 import com.iancheng.springbootmall.dto.UserVerifyRequest;
 import com.iancheng.springbootmall.model.User;
 import com.iancheng.springbootmall.repository.UserRepository;
+import com.iancheng.springbootmall.service.JwtService;
 import com.iancheng.springbootmall.service.UserService;
+
 
 import java.util.Date;
 
@@ -15,19 +18,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
- 
+	private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
+    
     @Autowired
     private UserRepository userRepository;
     
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private JwtService jwtService;
+    
+    
     @Override
     public User register(UserRegisterRequest userRegisterRequest) {
     	User user = userRepository.getUserByEmail(userRegisterRequest.getEmail());
@@ -38,21 +47,22 @@ public class UserServiceImpl implements UserService {
            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
-        // 使用 MD5 生成密碼的雜湊值
-        String hashedPassword = DigestUtils.md5DigestAsHex(userRegisterRequest.getPassword().getBytes());
-        userRegisterRequest.setPassword(hashedPassword);
-
         // 創建帳號
         user = new User();
+
+        user.setEmail(userRegisterRequest.getEmail());
+        user.setPassword(passwordEncoder.encode(userRegisterRequest.getPassword()));
+        user.setUserName(userRegisterRequest.getUserName());
+        user.setRole(Role.UNVERIFIED);
         
         Date now = new Date();
-        
-        user.setEmail(userRegisterRequest.getEmail());
-        user.setPassword(userRegisterRequest.getPassword());
-        user.setUserName(userRegisterRequest.getUserName());
+
         user.setCreatedDate(now);
         user.setLastModifiedDate(now);
-        user.setRole(Role.UNVERIFIED);
+
+        String jwtToken = jwtService.generateToken(user);
+        
+        user.setToken(jwtToken);
         
         user = userRepository.save(user);
         
@@ -69,12 +79,13 @@ public class UserServiceImpl implements UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
-        // 使用 MD5 生成密碼的雜湊值
-        String hashedPassword = DigestUtils.md5DigestAsHex(userLoginRequest.getPassword().getBytes());
-
         // 比較密碼
-        if (user.getPassword().equals(hashedPassword)) {
-        	return user;
+        if (passwordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
+        	String jwtToken = jwtService.generateToken(user);
+            
+            user.setToken(jwtToken);
+        	
+            return user;
         } else {
             log.warn("Email {} 的密碼不正確", userLoginRequest.getEmail());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
@@ -94,4 +105,33 @@ public class UserServiceImpl implements UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 	}
+
+	@Override
+	public User checkIfUserExist(String email) {
+		User user = userRepository.getUserByEmail(email);
+    	
+        // 檢查 user 是否存在
+        if (user == null) {
+            log.warn("該 Email {} 尚未註冊", email);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        
+        return user;
+	}
+
+	@Override
+	public void resetPassword(UserResetPasswordRequest userResetPasswordRequest) {
+		User user = userRepository.getUserByEmail(userResetPasswordRequest.getEmail());
+    	
+		// 比較驗證碼
+        if (user.getPassword().equals(userResetPasswordRequest.getToken())) {
+        	user = userRepository.save(user);
+        } else {
+            log.warn("email {} 的驗證碼不正確", userResetPasswordRequest.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+		
+	}
+	
+	
 }

@@ -5,6 +5,7 @@ import com.iancheng.springbootmall.dto.ProductQueryParams;
 import com.iancheng.springbootmall.dto.ProductRequest;
 import com.iancheng.springbootmall.model.Product;
 import com.iancheng.springbootmall.service.ProductService;
+import com.iancheng.springbootmall.util.PageResponse;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 @Validated
 @RestController
-@CrossOrigin(origins = "*")
 public class ProductController {
 
     @Autowired
@@ -29,7 +29,7 @@ public class ProductController {
 
     @Tag(name = "getProducts")
     @GetMapping("/products")
-    public ResponseEntity<Page<Product>> getProducts(
+    public ResponseEntity<PageResponse<Product>> getProducts(
             // 查詢條件 Filtering
             @RequestParam(required = false) ProductCategory category,
             @RequestParam(required = false) String search,
@@ -51,9 +51,16 @@ public class ProductController {
         productQueryParams.setPage(page - 1 < 0 ? 0 : page - 1);
 
         // 取得 product list 分頁
-        Page<Product> productListPageDetail = productService.getProducts(productQueryParams);
+        Page<Product> productListPage = productService.getProducts(productQueryParams);
 
-        return ResponseEntity.status(HttpStatus.OK).body(productListPageDetail);
+        // 整理分頁
+        PageResponse<Product> pageResponse = new PageResponse<>();
+        pageResponse.setResults(productListPage.getContent());
+        pageResponse.setSize(productListPage.getSize());
+        pageResponse.setPage(productListPage.getPageable().getPageNumber());
+        pageResponse.setTotal(productListPage.getTotalElements());
+        
+        return ResponseEntity.status(HttpStatus.OK).body(pageResponse);
     }
 
     @Tag(name = "getProduct")

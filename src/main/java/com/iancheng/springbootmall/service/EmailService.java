@@ -6,5 +6,7 @@ import com.iancheng.springbootmall.util.*;
 public interface EmailService {
 	
 	void sendValidationLink(User user);
+
+	void sendPasswordResetLink(User user);
 	
 }

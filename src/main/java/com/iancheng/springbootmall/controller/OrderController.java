@@ -3,7 +3,9 @@ package com.iancheng.springbootmall.controller;
 import com.iancheng.springbootmall.dto.CreateOrderRequest;
 import com.iancheng.springbootmall.dto.OrderQueryParams;
 import com.iancheng.springbootmall.model.Order;
+import com.iancheng.springbootmall.model.Product;
 import com.iancheng.springbootmall.service.OrderService;
+import com.iancheng.springbootmall.util.PageResponse;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -23,7 +25,7 @@ public class OrderController {
 
     @Tag(name = "getOrders")
     @GetMapping("/users/{userId}/orders")
-    public ResponseEntity<Page<Order>> getOrders(
+    public ResponseEntity<PageResponse<Order>> getOrders(
             @PathVariable Integer userId,
             @RequestParam(defaultValue = "5") @Max(1000) @Min(0) Integer size,
             @RequestParam(defaultValue = "0") @Min(0) Integer page
@@ -34,9 +36,16 @@ public class OrderController {
         orderQueryParams.setPage(page);
 
         // 取得 order list 分頁
-        Page<Order> orderListPageDetail = orderService.getOrders(orderQueryParams);
+        Page<Order> orderListPage = orderService.getOrders(orderQueryParams);
 
-        return ResponseEntity.status(HttpStatus.OK).body(orderListPageDetail);
+        // 整理分頁
+        PageResponse<Order> pageResponse = new PageResponse<>();
+        pageResponse.setResults(orderListPage.getContent());
+        pageResponse.setSize(orderListPage.getSize());
+        pageResponse.setPage(orderListPage.getPageable().getPageNumber());
+        pageResponse.setTotal(orderListPage.getTotalElements());
+        
+        return ResponseEntity.status(HttpStatus.OK).body(pageResponse);
     }
 
     @Tag(name = "createOrder")
