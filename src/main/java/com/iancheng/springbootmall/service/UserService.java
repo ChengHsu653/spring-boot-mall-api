@@ -11,10 +11,10 @@ public interface UserService {
 
 	User login(UserLoginRequest userLoginRequest);
 
-	void verify(UserVerifyRequest userVerifyRequest);
-
-	User checkIfUserExist(String email);
+	boolean verify(UserVerifyRequest userVerifyRequest);
 
 	void resetPassword(UserResetPasswordRequest userResetPasswordRequest);
+
+	User getUserByEmail(String email);
     
 }

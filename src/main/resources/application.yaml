@@ -3,12 +3,14 @@ spring:
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/mall?serverTimezone=Asia/Taipei&characterEncoding=utf-8
+    url: jdbc:mysql://localhost:3306/mall?serverTimezone=Asia/Taipei&characterEncoding=utf-8 
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
     show-sql: true
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate.format_sql: true
   mail:
     host: smtp.gmail.com
     port: '587'
@@ -23,7 +25,12 @@ spring:
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH-mm-ss
-
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: UTF-8
+    mode: HTML
 
 springdoc:
   swagger-ui:

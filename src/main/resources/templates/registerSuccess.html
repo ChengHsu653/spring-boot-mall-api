@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>帳號驗證通過</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- 引入Bootstrap樣式表 -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css">
+	<style>
+		/* 加入自定義樣式 */
+		.congratulation-img {
+			width: 100%;
+			max-width: 500px;
+			margin-bottom: 20px;
+		}
+
+		.congratulation-heading {
+			font-size: 3rem;
+			font-weight: bold;
+			margin-bottom: 10px;
+		}
+
+		.contact-info {
+			font-size: 1.2rem;
+			margin-bottom: 20px;
+			color: #6c757d;
+		}
+
+		.contact-info strong {
+			font-weight: bold;
+			margin-right: 5px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container my-5">
+		<div class="row justify-content-center">
+			<div class="col-md-8 col-lg-6 text-center">
+				<img src="https://via.placeholder.com/500x300.png?text=Congratulation" class="congratulation-img" alt="Congratulation Image">
+				<h1 class="congratulation-heading">恭喜您，您的帳號已經成功通過驗證！</h1>
+				<div class="contact-info mt-4" id="contact-info">
+					<p>如有問題，歡迎聯繫我們的客戶服務團隊：</p>
+					<p><strong>客戶服務電話：</strong>02-12345678</p>
+					<p><strong>電子郵件：</strong>service@example.com</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

@@ -3,7 +3,6 @@ package com.iancheng.springbootmall.controller;
 import com.iancheng.springbootmall.dto.CreateOrderRequest;
 import com.iancheng.springbootmall.dto.OrderQueryParams;
 import com.iancheng.springbootmall.model.Order;
-import com.iancheng.springbootmall.model.Product;
 import com.iancheng.springbootmall.service.OrderService;
 import com.iancheng.springbootmall.util.PageResponse;
 

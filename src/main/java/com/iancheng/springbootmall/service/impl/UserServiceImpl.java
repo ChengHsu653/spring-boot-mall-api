@@ -93,21 +93,24 @@ public class UserServiceImpl implements UserService {
     }
 
 	@Override
-	public void verify(UserVerifyRequest userVerifyRequest) {
+	public boolean verify(UserVerifyRequest userVerifyRequest) {
 		User user = userRepository.getUserByEmail(userVerifyRequest.getEmail());
-    	
+
         // 比較驗證碼
         if (user.getPassword().equals(userVerifyRequest.getToken())) {
         	user.setRole(Role.MEMBER);
         	user = userRepository.save(user);
+        	
+        	return true;
         } else {
             log.warn("email {} 的驗證碼不正確", userVerifyRequest.getEmail());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+
+            return false;
         }
 	}
 
 	@Override
-	public User checkIfUserExist(String email) {
+	public User getUserByEmail(String email) {
 		User user = userRepository.getUserByEmail(email);
     	
         // 檢查 user 是否存在

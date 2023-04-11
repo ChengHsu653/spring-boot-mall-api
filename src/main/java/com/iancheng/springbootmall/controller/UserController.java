@@ -1,5 +1,6 @@
 package com.iancheng.springbootmall.controller;
 
+import com.iancheng.springbootmall.dto.UserForgetRequest;
 import com.iancheng.springbootmall.dto.UserLoginRequest;
 import com.iancheng.springbootmall.dto.UserRegisterRequest;
 import com.iancheng.springbootmall.dto.UserResetPasswordRequest;
@@ -14,14 +15,13 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 public class UserController {
 
     @Autowired
@@ -63,24 +63,28 @@ public class UserController {
     	userVerifyRequest.setEmail(email);
     	userVerifyRequest.setToken(token);
     	
-    	userService.verify(userVerifyRequest);
-    	
-		return "註冊成功";
+    	return userService.verify(userVerifyRequest) == true ? "registerSuccess":"registerFail";
     }
     
     @Tag(name = "forgetPassword")
-    @PostMapping("/users/forgetPassword")
-    public String forgetPassword(@RequestBody String email) {
-    	
-    	User user = userService.checkIfUserExist(email);
+    @PostMapping("/users/forget")
+    public ResponseEntity<?> forgetPassword(@RequestBody UserForgetRequest userForgetRequest) {
+    	User user = userService.getUserByEmail(userForgetRequest.getEmail());
     	
     	emailService.sendPasswordResetLink(user);
     	
-		return "修改密碼郵件寄送成功";
+		return ResponseEntity.status(HttpStatus.OK).build();
+    }
+    
+    @Tag(name = "resetForm")
+    @GetMapping("/users/reset_form")
+    public String resetForm() {
+		return "resetForm";
+    
     }
     
     @Tag(name = "resetPassword")
-    @GetMapping("/users/reset_password")
+    @GetMapping("/users/reset")
     public String resetPassword(
     		@RequestParam String email,
     		@RequestParam String token

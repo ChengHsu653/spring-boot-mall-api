@@ -239,6 +239,46 @@
                     "items": []
                   },
                   "bodyType": "Text",
+                  "textBody": "{\n  \"email\":\"dunz.zheng@gmail.com\"\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "localhost:8080",
+                  "path": "/users/forget"
+                },
+                "id": "c816c612-dd3c-41e4-9648-9b50439d05f8",
+                "name": "forgetPassword",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+                  "name": "POST"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
                   "textBody": "{\n  \"email\":\"dunz.zheng@gmail.com\",\n  \"password\":\"123456\"\n}"
                 },
                 "uri": {

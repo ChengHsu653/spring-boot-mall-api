@@ -5,11 +5,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.iancheng.springbootmall.model.User;
+import com.iancheng.springbootmall.repository.UserRepository;
 import com.iancheng.springbootmall.service.EmailService;
 
 import jakarta.mail.internet.MimeMessage;
@@ -22,6 +25,9 @@ public class EmailServiceImpl implements EmailService{
 
 	@Autowired
 	private JavaMailSender javaMailSender;
+	
+	@Autowired
+	private UserRepository userRepository;
 	
 	@Value("${spring.mail.username}") 
 	private String sender;
@@ -56,17 +62,17 @@ public class EmailServiceImpl implements EmailService{
             
             log.info("驗證郵件 Email {} 寄送成功!", user.getEmail());
         } catch (Exception e) {
+        	userRepository.delete(user);
+        	
         	log.error("驗證郵件 Email {} 寄送失敗!", user.getEmail());
+        	throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 	}
 
 	@Override
 	public void sendPasswordResetLink(User user) {
 		try {
-            var link = String.format(
-            		"http://localhost:8080/users/verify?email=%s&token=%s",
-            		user.getEmail(),
-            		user.getPassword());
+            var link = "http://localhost:8080/users/reset_form";
             
             var anchor = String.format(
             		"<a href='%s'>重設密碼</a>",
@@ -90,6 +96,7 @@ public class EmailServiceImpl implements EmailService{
             log.info("重設密碼 Email {} 寄送成功!", user.getEmail());
         } catch (Exception e) {
         	log.error("重設密碼 Email {} 寄送失敗!", user.getEmail());
+        	throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 		
 	}
