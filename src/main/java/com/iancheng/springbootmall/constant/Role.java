@@ -1,7 +1,7 @@
 package com.iancheng.springbootmall.constant;
 
 public enum Role {
-	ADMIN,
-	MEMBER,
-	UNVERIFIED
+	ROLE_ADMIN,
+	ROLE_MEMBER,
+	ROLE_UNVERIFIED
 }

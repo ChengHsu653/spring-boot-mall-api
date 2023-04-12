@@ -4,7 +4,6 @@ package com.iancheng.springbootmall.service.impl;
 import com.iancheng.springbootmall.constant.Role;
 import com.iancheng.springbootmall.dto.UserLoginRequest;
 import com.iancheng.springbootmall.dto.UserRegisterRequest;
-import com.iancheng.springbootmall.dto.UserResetPasswordRequest;
 import com.iancheng.springbootmall.dto.UserVerifyRequest;
 import com.iancheng.springbootmall.model.User;
 import com.iancheng.springbootmall.repository.UserRepository;
@@ -53,7 +52,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail(userRegisterRequest.getEmail());
         user.setPassword(passwordEncoder.encode(userRegisterRequest.getPassword()));
         user.setUserName(userRegisterRequest.getUserName());
-        user.setRole(Role.UNVERIFIED);
+        user.setRole(Role.ROLE_UNVERIFIED);
         
         Date now = new Date();
 
@@ -98,7 +97,7 @@ public class UserServiceImpl implements UserService {
 
         // 比較驗證碼
         if (user.getPassword().equals(userVerifyRequest.getToken())) {
-        	user.setRole(Role.MEMBER);
+        	user.setRole(Role.ROLE_MEMBER);
         	user = userRepository.save(user);
         	
         	return true;

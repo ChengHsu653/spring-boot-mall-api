@@ -61,7 +61,7 @@ public class OrderController {
     }
     
     @Tag(name = "checkout")
-    @PostMapping("/users/{userId}/{orderId}")
+    @PostMapping("/users/{userId}/orders/{orderId}")
     public ResponseEntity<String> checkout(
     		@PathVariable Integer userId,
     		@PathVariable Integer orderId				

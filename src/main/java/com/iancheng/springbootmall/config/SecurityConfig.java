@@ -3,7 +3,9 @@ package com.iancheng.springbootmall.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -15,6 +17,7 @@ import com.iancheng.springbootmall.filter.JwtAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 	
 	@Autowired
@@ -29,8 +32,14 @@ public class SecurityConfig {
 	        .csrf()
 	        .disable()
 	        .authorizeHttpRequests()
+	        .requestMatchers("/users/*/orders/*")
+	        .hasRole("MEMBER")
 	        .requestMatchers("/users/*")
 	        .permitAll()
+	        .requestMatchers(HttpMethod.GET,"/products/*")
+	        .permitAll()
+	        .requestMatchers("/*")
+	        .hasRole("ADMIN")
 	        .anyRequest()
 	        .authenticated()
 	        .and()
