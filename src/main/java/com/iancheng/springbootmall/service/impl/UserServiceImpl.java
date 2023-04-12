@@ -123,18 +123,21 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void resetPassword(UserResetPasswordRequest userResetPasswordRequest) {
-		User user = userRepository.getUserByEmail(userResetPasswordRequest.getEmail());
+	public boolean resetPassword(String email, String password, String confirmPassword) {
+		User user = userRepository.getUserByEmail(email);
     	
-		// 比較驗證碼
-        if (user.getPassword().equals(userResetPasswordRequest.getToken())) {
+		// 比較再次確認密碼及先前密碼
+        if (password.equals(confirmPassword) &&
+        	!passwordEncoder.matches(password, user.getPassword())
+        ) {
+        	user.setPassword(passwordEncoder.encode(password));
         	user = userRepository.save(user);
+        	
+        	return true;
         } else {
-            log.warn("email {} 的驗證碼不正確", userResetPasswordRequest.getEmail());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            log.warn("欲修改密碼與確認密碼不同或與先前密碼相同");
+
+            return false;
         }
-		
 	}
-	
-	
 }

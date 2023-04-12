@@ -27,7 +27,11 @@
     <div class="container my-5">
         <div class="card p-4">
             <h2 class="text-center mb-4">重設密碼</h2>
-            <form th:action="@{/reset-password}" method="post">
+            <form th:action="@{/users/reset}" method="post">
+            	<div class="mb-3">
+                    <label for="email" class="form-label">電子郵件</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">新密碼</label>
                     <input type="password" class="form-control" id="password" name="password" required>

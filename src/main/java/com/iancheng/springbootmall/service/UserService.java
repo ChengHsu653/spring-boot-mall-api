@@ -13,8 +13,8 @@ public interface UserService {
 
 	boolean verify(UserVerifyRequest userVerifyRequest);
 
-	void resetPassword(UserResetPasswordRequest userResetPasswordRequest);
-
 	User getUserByEmail(String email);
+
+	boolean resetPassword(String email, String password, String confirmPassword);
     
 }

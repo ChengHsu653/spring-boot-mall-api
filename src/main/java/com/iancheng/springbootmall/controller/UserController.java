@@ -24,78 +24,63 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class UserController {
 
-    @Autowired
-    private UserService userService;
-    
-    @Autowired
-    private EmailService emailService;
+	@Autowired
+	private UserService userService;
 
-    
-    @Tag(name = "register")
-    @PostMapping("/users/register")
-    public ResponseEntity<User> register(
-    		@RequestBody @Valid UserRegisterRequest userRegisterRequest
-    ) {
-    	User user = userService.register(userRegisterRequest);
-   	       
-        emailService.sendValidationLink(user);
-        
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
-    }
+	@Autowired
+	private EmailService emailService;
 
-    @Tag(name = "login")
-    @PostMapping("/users/login")
-    public ResponseEntity<User> login(
-    		@RequestBody @Valid UserLoginRequest userLoginRequest
-    ) {
-        User user = userService.login(userLoginRequest);
+	@Tag(name = "register")
+	@PostMapping("/users/register")
+	public ResponseEntity<User> register(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
+		User user = userService.register(userRegisterRequest);
 
-        return ResponseEntity.status(HttpStatus.OK).body(user);
-    }
-    
-    @Tag(name = "verify")
-    @GetMapping("/users/verify")
-    public String verify(
-    		@RequestParam String email,
-    		@RequestParam String token
-    ) {
-    	UserVerifyRequest userVerifyRequest = new UserVerifyRequest();
-    	userVerifyRequest.setEmail(email);
-    	userVerifyRequest.setToken(token);
-    	
-    	return userService.verify(userVerifyRequest) == true ? "registerSuccess":"registerFail";
-    }
-    
-    @Tag(name = "forgetPassword")
-    @PostMapping("/users/forget")
-    public ResponseEntity<?> forgetPassword(@RequestBody UserForgetRequest userForgetRequest) {
-    	User user = userService.getUserByEmail(userForgetRequest.getEmail());
-    	
-    	emailService.sendPasswordResetLink(user);
-    	
+		emailService.sendValidationLink(user);
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(user);
+	}
+
+	@Tag(name = "login")
+	@PostMapping("/users/login")
+	public ResponseEntity<User> login(@RequestBody @Valid UserLoginRequest userLoginRequest) {
+		User user = userService.login(userLoginRequest);
+
+		return ResponseEntity.status(HttpStatus.OK).body(user);
+	}
+
+	@Tag(name = "verify")
+	@GetMapping("/users/verify")
+	public String verify(@RequestParam String email, @RequestParam String token) {
+		UserVerifyRequest userVerifyRequest = new UserVerifyRequest();
+		userVerifyRequest.setEmail(email);
+		userVerifyRequest.setToken(token);
+
+		return userService.verify(userVerifyRequest) == true ? "registerSuccess" : "registerFail";
+	}
+
+	@Tag(name = "forgetPassword")
+	@PostMapping("/users/forget")
+	public ResponseEntity<?> forgetPassword(@RequestBody UserForgetRequest userForgetRequest) {
+		User user = userService.getUserByEmail(userForgetRequest.getEmail());
+
+		emailService.sendPasswordResetLink(user);
+
 		return ResponseEntity.status(HttpStatus.OK).build();
-    }
-    
-    @Tag(name = "resetForm")
-    @GetMapping("/users/reset_form")
-    public String resetForm() {
+	}
+
+	@Tag(name = "resetForm")
+	@GetMapping("/users/reset_form")
+	public String resetForm() {
+		
 		return "resetForm";
-    
-    }
-    
-    @Tag(name = "resetPassword")
-    @GetMapping("/users/reset")
-    public String resetPassword(
-    		@RequestParam String email,
-    		@RequestParam String token
-    ) {
-    	UserResetPasswordRequest userResetPasswordRequest = new UserResetPasswordRequest();
-    	userResetPasswordRequest.setEmail(email);
-    	userResetPasswordRequest.setToken(token);
-    	
-    	userService.resetPassword(userResetPasswordRequest);
-    	
-		return "修改密碼成功";
-    
-    }
+	}
+
+	@Tag(name = "resetPassword")
+	@PostMapping("/users/reset")
+	public String resetPassword(
+			@RequestParam String email, @RequestParam String password,
+			@RequestParam String confirmPassword) {
+		
+		return userService.resetPassword(email, password, confirmPassword) == true ? "resetSuccess":"resetFail";
+	}
 }
