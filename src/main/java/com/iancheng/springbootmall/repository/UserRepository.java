@@ -10,7 +10,7 @@ import com.iancheng.springbootmall.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer>{
 	
-	User getUserByEmail(String email);
+	User getByEmail(String email);
 	
 	Optional<User> findByEmail(String email);
 }

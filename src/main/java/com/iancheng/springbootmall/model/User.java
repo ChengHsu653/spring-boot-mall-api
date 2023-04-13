@@ -10,6 +10,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
@@ -28,7 +29,7 @@ public class User implements UserDetails{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "userId")
+	@Column(name = "user_id")
     private Integer userId;
 	
 	@Column(name = "email")
@@ -38,22 +39,23 @@ public class User implements UserDetails{
     @Column(name = "password")
     private String password;
     
-    @Column(name = "userName")
+    @Column(name = "user_name")
     private String userName;
 
-    @Column(name = "createdDate")
+    @Column(name = "created_date")
 	private Date createdDate;
     
-    @Column(name = "lastModifiedDate")
+    @Column(name = "last_modified_date")
     private Date lastModifiedDate;
     
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
     
-    @Transient
-    private String token;
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
     
+  
     @Override
     public String getPassword() {
         return password;
@@ -135,14 +137,6 @@ public class User implements UserDetails{
 
 	public void setRole(Role role) {
 		this.role = role;
-	}
-
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
 	}
 
 	public void setPassword(String password) {

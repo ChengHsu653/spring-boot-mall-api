@@ -18,19 +18,19 @@ public class Order {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "orderId")
+	@Column(name = "order_id")
     private Integer orderId;
 	
-	@Column(name = "userId")
+	@Column(name = "user_id")
     private Integer userId;
 	
-	@Column(name = "totalAmount")
+	@Column(name = "total_amount")
     private BigDecimal totalAmount;
 	
-	@Column(name = "createdDate")
+	@Column(name = "created_date")
     private Date createdDate;
 	
-	@Column(name = "lastModifiedDate")
+	@Column(name = "last_modified_date")
     private Date lastModifiedDate;
 
     @Transient

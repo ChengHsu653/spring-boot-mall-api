@@ -21,17 +21,17 @@ public class Product {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "productId")
+	@Column(name = "product_id")
 	private Integer productId;
 
-	@Column(name = "productName")
+	@Column(name = "product_name")
     private String productName;
     
     @Enumerated(EnumType.STRING)
     @Column(name = "category")
     private ProductCategory category;
 
-    @Column(name = "imageUrl")
+    @Column(name = "image_url")
     private String imageUrl;
 
     @Column(name = "price")
@@ -43,10 +43,10 @@ public class Product {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "createdDate")
+    @Column(name = "created_date")
     private Date createdDate;
 
-    @Column(name = "lastModifiedDate")
+    @Column(name = "last_modified_date")
     private Date lastModifiedDate;
 
     

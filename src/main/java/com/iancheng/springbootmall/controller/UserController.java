@@ -3,7 +3,6 @@ package com.iancheng.springbootmall.controller;
 import com.iancheng.springbootmall.dto.UserForgetRequest;
 import com.iancheng.springbootmall.dto.UserLoginRequest;
 import com.iancheng.springbootmall.dto.UserRegisterRequest;
-import com.iancheng.springbootmall.dto.UserResetPasswordRequest;
 import com.iancheng.springbootmall.dto.UserVerifyRequest;
 import com.iancheng.springbootmall.model.User;
 import com.iancheng.springbootmall.service.EmailService;
@@ -47,6 +46,12 @@ public class UserController {
 
 		return ResponseEntity.status(HttpStatus.OK).body(user);
 	}
+	
+	@Tag(name = "logout")
+	@GetMapping("/users/logout")
+	public ResponseEntity<?> logout() {
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
 
 	@Tag(name = "verify")
 	@GetMapping("/users/verify")
@@ -83,4 +88,6 @@ public class UserController {
 		
 		return userService.resetPassword(email, password, confirmPassword) == true ? "resetSuccess":"resetFail";
 	}
+	
+	
 }

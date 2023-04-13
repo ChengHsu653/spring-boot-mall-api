@@ -7,19 +7,22 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+
 @Entity
+@Table(name = "`order_item`")
 public class OrderItem {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "orderItemId")
+	@Column(name = "order_item_id")
     private Integer orderItemId;
 	
-	@Column(name = "orderId")
+	@Column(name = "order_id")
     private Integer orderId;
 	
-	@Column(name = "productId")
+	@Column(name = "product_id")
     private Integer productId;
 	
 	@Column(name = "quantity")
