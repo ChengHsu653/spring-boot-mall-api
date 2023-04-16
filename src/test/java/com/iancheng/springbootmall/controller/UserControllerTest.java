@@ -55,7 +55,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.lastModifiedDate", notNullValue()));
 
         // 檢查資料庫中的密碼不為明碼
-        User user = userRepository.getUserByEmail(userRegisterRequest.getEmail());
+        User user = userRepository.getByEmail(userRegisterRequest.getEmail());
         assertNotEquals(userRegisterRequest.getPassword(), user.getPassword());
     }
 
