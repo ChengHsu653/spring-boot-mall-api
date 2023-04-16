@@ -55,7 +55,7 @@
                   {
                     "enabled": true,
                     "name": "Authorization",
-                    "value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkdW56LnpoZW5nQGdtYWlsLmNvbSIsImlhdCI6MTY4MTMxNzgxOSwiZXhwIjoxNjgxMzE5MjU5fQ.ToXAPFsdfh8kYmxczGWw9WT1DjTrTBImL1jnZ8L2-Lc"
+                    "value": ""
                   }
                 ]
               }
@@ -93,7 +93,7 @@
                   {
                     "enabled": true,
                     "name": "Authorization",
-                    "value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkdW56LnpoZW5nQGdtYWlsLmNvbSIsImlhdCI6MTY4MTMxNzgxOSwiZXhwIjoxNjgxMzE5MjU5fQ.ToXAPFsdfh8kYmxczGWw9WT1DjTrTBImL1jnZ8L2-Lc"
+                    "value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkdW56LnpoZW5nQGdtYWlsLmNvbSIsImlhdCI6MTY4MTU3MjgwNSwiZXhwIjoxNjgxNjU5MjA1fQ.3D7z1hc2413_8HwB9kreNz6fQrnep7Po1FyvNQnkSN0"
                   }
                 ]
               }
@@ -127,13 +127,7 @@
                 },
                 "id": "b934beee-f874-483c-bf16-3696c29c556b",
                 "name": "getProduct",
-                "headers": [
-                  {
-                    "enabled": true,
-                    "name": "Authorization",
-                    "value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkdW56LnpoZW5nQGdtYWlsLmNvbSIsImlhdCI6MTY4MTMxNzgxOSwiZXhwIjoxNjgxMzE5MjU5fQ.ToXAPFsdfh8kYmxczGWw9WT1DjTrTBImL1jnZ8L2-Lc"
-                  }
-                ]
+                "headers": []
               }
             },
             {
@@ -158,13 +152,13 @@
                     "items": [
                       {
                         "enabled": true,
-                        "name": "search",
-                        "value": "t"
+                        "name": "category",
+                        "value": "FOOD"
                       },
                       {
                         "enabled": true,
-                        "name": "page",
-                        "value": "2"
+                        "name": "search",
+                        "value": "o"
                       }
                     ]
                   },
@@ -177,13 +171,7 @@
                 },
                 "id": "b52b401f-0533-489e-86d0-96aa61dce73e",
                 "name": "getProducts",
-                "headers": [
-                  {
-                    "enabled": true,
-                    "name": "Authorization",
-                    "value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkdW56LnpoZW5nQGdtYWlsLmNvbSIsImlhdCI6MTY4MTMxNzgxOSwiZXhwIjoxNjgxMzE5MjU5fQ.ToXAPFsdfh8kYmxczGWw9WT1DjTrTBImL1jnZ8L2-Lc"
-                  }
-                ]
+                "headers": []
               }
             },
             {
@@ -319,6 +307,77 @@
               "entity": {
                 "type": "Request",
                 "method": {
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "localhost:8080",
+                  "path": "/users/logout"
+                },
+                "id": "399832b4-c6ad-478a-9b69-978607e9038b",
+                "name": "logout",
+                "headers": []
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+                  "name": "POST"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "localhost:8080",
+                  "path": "/users/refresh_token"
+                },
+                "id": "f63f0172-4b21-40f3-8101-7df33ad6a8c6",
+                "name": "refreshToken",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Authorization",
+                    "value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkdW56LnpoZW5nQGdtYWlsLmNvbSIsImlhdCI6MTY4MTU3NzM3NSwiZXhwIjoxNjgyMTgyMTc1fQ.H9JQicABaK6xiDQ2MMzH2tTjkJ9kB6c9AEJgkS7rVzM"
+                  }
+                ]
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
                   "requestBody": true,
                   "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
                   "name": "POST"
@@ -390,7 +449,7 @@
                     "version": "V11"
                   },
                   "host": "localhost:8080",
-                  "path": "/users/1/orders/7"
+                  "path": "/users/1/orders/22"
                 },
                 "id": "eb566ddc-c091-40c7-be4a-3696894b8283",
                 "name": "checkOut",
@@ -399,6 +458,11 @@
                     "enabled": true,
                     "name": "Content-Type",
                     "value": "application/json"
+                  },
+                  {
+                    "enabled": true,
+                    "name": "Authorization",
+                    "value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkdW56LnpoZW5nQGdtYWlsLmNvbSIsImlhdCI6MTY4MTYzNjM0MywiZXhwIjoxNjgxNzIyNzQzfQ.Ifw85OVQ0tPHJWx7nK6Y4Ry_H33jrmTGrUHj6LqSfuc"
                   }
                 ]
               }
@@ -418,7 +482,7 @@
                     "items": []
                   },
                   "bodyType": "Text",
-                  "textBody": "{\n  \"buyItemList\":[\n    {\n      \"productId\":7,\n      \"quantity\":10\n    },\n    {\n      \"productId\":8,\n      \"quantity\":10\n    }\n  ]\n}"
+                  "textBody": "{\n  \"buyItemList\":[\n    {\n      \"productId\":3,\n      \"quantity\":1\n    },\n    {\n      \"productId\":4,\n      \"quantity\":1\n    }\n  ]\n}"
                 },
                 "uri": {
                   "query": {
@@ -430,20 +494,20 @@
                     "version": "V11"
                   },
                   "host": "localhost:8080",
-                  "path": "/users/3/orders"
+                  "path": "/users/1/orders"
                 },
                 "id": "ac638daa-bb0e-4f88-87d3-830f94fe2c69",
                 "name": "createOrder",
                 "headers": [
                   {
                     "enabled": true,
-                    "name": "Authorization",
-                    "value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkdW56LnpoZW5nQGdtYWlsLmNvbSIsImlhdCI6MTY4MTE1MDE0OCwiZXhwIjoxNjgxMTUxNTg4fQ.gvUA3eMA-DG0Y7xwqzjgfH9zQZrNxcTrYDhs7HvyAzA"
+                    "name": "Content-Type",
+                    "value": "application/json"
                   },
                   {
                     "enabled": true,
-                    "name": "Content-Type",
-                    "value": "application/json"
+                    "name": "Authorization",
+                    "value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkdW56LnpoZW5nQGdtYWlsLmNvbSIsImlhdCI6MTY4MTYzNjM0MywiZXhwIjoxNjgxNzIyNzQzfQ.Ifw85OVQ0tPHJWx7nK6Y4Ry_H33jrmTGrUHj6LqSfuc"
                   }
                 ]
               }
@@ -466,22 +530,38 @@
                 "uri": {
                   "query": {
                     "delimiter": "&",
-                    "items": []
+                    "items": [
+                      {
+                        "enabled": true,
+                        "name": "page",
+                        "value": "0"
+                      },
+                      {
+                        "enabled": true,
+                        "name": "size",
+                        "value": "10"
+                      }
+                    ]
                   },
                   "scheme": {
                     "name": "http",
                     "version": "V11"
                   },
                   "host": "localhost:8080",
-                  "path": "/users/9/orders"
+                  "path": "/users/1/orders"
                 },
                 "id": "f161fd20-9b47-408a-8ff1-ad3a180876eb",
                 "name": "getOrders",
                 "headers": [
                   {
                     "enabled": true,
+                    "name": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "enabled": true,
                     "name": "Authorization",
-                    "value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkdW56LnpoZW5nQGdtYWlsLmNvbSIsImlhdCI6MTY4MTMxNzgxOSwiZXhwIjoxNjgxMzE5MjU5fQ.ToXAPFsdfh8kYmxczGWw9WT1DjTrTBImL1jnZ8L2-Lc"
+                    "value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkdW56LnpoZW5nQGdtYWlsLmNvbSIsImlhdCI6MTY4MTYzNjM0MywiZXhwIjoxNjgxNzIyNzQzfQ.Ifw85OVQ0tPHJWx7nK6Y4Ry_H33jrmTGrUHj6LqSfuc"
                   }
                 ]
               }

@@ -1,17 +1,7 @@
 spring:
-  datasource:
-    username: root
-    password: root
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/mall?serverTimezone=Asia/Taipei&characterEncoding=utf-8 
-  jpa:
-    database-platform: org.hibernate.dialect.MySQLDialect
-    show-sql: true
-    open-in-view: false
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate.format_sql: true
+  profiles:
+    active: dev        
+ 
   mail:
     host: smtp.gmail.com
     port: '587'
@@ -32,7 +22,15 @@ spring:
     suffix: .html
     encoding: UTF-8
     mode: HTML
-
+    
+application:
+  security:
+    jwt:
+      secret-key: 5468576D5A7134743677397A24432646294A404E635266556A586E3272357538
+      expiration: 86400000 # a day
+      refresh-token:
+        expiration: 604800000 # 7 days
+       
 springdoc:
   swagger-ui:
-    path: /
+    path: /swagger-ui

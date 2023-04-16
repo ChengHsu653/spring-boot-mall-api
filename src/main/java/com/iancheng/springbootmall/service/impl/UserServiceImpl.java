@@ -1,8 +1,10 @@
 package com.iancheng.springbootmall.service.impl;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iancheng.springbootmall.constant.Role;
 import com.iancheng.springbootmall.constant.TokenType;
+import com.iancheng.springbootmall.dto.UserForgetRequest;
 import com.iancheng.springbootmall.dto.UserLoginRequest;
 import com.iancheng.springbootmall.dto.UserRegisterRequest;
 import com.iancheng.springbootmall.dto.UserVerifyRequest;
@@ -13,13 +15,17 @@ import com.iancheng.springbootmall.repository.UserRepository;
 import com.iancheng.springbootmall.service.JwtService;
 import com.iancheng.springbootmall.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -69,8 +75,12 @@ public class UserServiceImpl implements UserService {
         
         // 產生 JWT
         String jwtToken = jwtService.generateToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
 
         saveUserToken(savedUser, jwtToken);
+        
+        user.setAccessToken(jwtToken);
+        user.setRefreshToken(refreshToken);
         
         return user;
     }
@@ -105,10 +115,14 @@ public class UserServiceImpl implements UserService {
         // 比較密碼
         if (passwordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
         	String jwtToken = jwtService.generateToken(user);
-            
+        	String refreshToken = jwtService.generateRefreshToken(user);
+
             revokeAllUserTokens(user);
             saveUserToken(user, jwtToken);
         	
+            user.setAccessToken(jwtToken);
+            user.setRefreshToken(refreshToken);
+            
             return user;
         } else {
             log.warn("Email {} 的密碼不正確", userLoginRequest.getEmail());
@@ -147,19 +161,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User getUserByEmail(String email) {
-		User user = userRepository.getByEmail(email);
-    	
-        // 檢查 user 是否存在
-        if (user == null) {
-            log.warn("該 Email {} 尚未註冊", email);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
-        
-        return user;
-	}
-
-	@Override
 	public boolean resetPassword(String email, String password, String confirmPassword) {
 		User user = userRepository.getByEmail(email);
     	
@@ -177,6 +178,53 @@ public class UserServiceImpl implements UserService {
 
             return false;
         }
+	}
+
+	@Override
+	public User forgetPassword(UserForgetRequest userForgetRequest) {
+		String email = userForgetRequest.getEmail();
+		
+		// 檢查註冊的 email
+        if (!emailExists(email)) {
+            log.warn("該 Email {} 尚未註冊", email);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        User user = userRepository.getByEmail(email);
+        
+        return user;
+	}
+
+	@Override
+	public void refreshToken(
+			HttpServletRequest request,
+			HttpServletResponse response
+	) throws IOException {
+		final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+		final String refreshToken;
+		final String userEmail;
+		
+		if (authHeader == null || !authHeader.startsWith("Bearer ")) return;
+		
+		refreshToken = authHeader.substring(7);
+		userEmail = jwtService.extractUserEmail(refreshToken);
+		
+		if(userEmail != null) {
+			User user = userRepository.findByEmail(userEmail).orElseThrow();
+			
+			if (jwtService.isTokenValid(refreshToken, user)) {
+				String accessToken = jwtService.generateToken(user);
+				
+				revokeAllUserTokens(user);
+	            saveUserToken(user, accessToken);
+				
+				user.setRefreshToken(refreshToken);
+				user.setAccessToken(accessToken);
+				
+				response.setContentType("application/json");
+				
+				new ObjectMapper().writeValue(response.getOutputStream(), user);
+			}
+		}
 	}
 	
 	

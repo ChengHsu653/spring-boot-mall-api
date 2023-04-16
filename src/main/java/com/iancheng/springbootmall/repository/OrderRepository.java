@@ -7,10 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.iancheng.springbootmall.model.Order;
+import com.iancheng.springbootmall.model.User;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer>{
 
-	Page<Order> findAllByUserId(Integer userId, Pageable pageable);
+	Page<Order> findAllByUser(User user, Pageable pageable);
 	
+	boolean existsByUser(User user);
 }

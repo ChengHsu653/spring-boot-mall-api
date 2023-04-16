@@ -34,7 +34,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -57,10 +56,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Page<Order> getOrders(OrderQueryParams orderQueryParams) {
-    	Optional<User> optionalUser = userRepository.findById(orderQueryParams.getUserId());
-
-        // 檢查 user 是否存在
-        if (!optionalUser.isPresent()) {
+    	// 檢查 user 是否存在
+        if (!userExists(orderQueryParams.getUserId())) {
             log.warn("該 userId {} 不存在", orderQueryParams.getUserId());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
@@ -71,43 +68,33 @@ public class OrderServiceImpl implements OrderService {
     			Sort.by("createdDate")
     	);
     	
-    	Page<Order> orderList = orderRepository.findAllByUserId(orderQueryParams.getUserId(), pageable);
-
-        for (Order order: orderList) {
-            List<OrderItem> orderItemList = orderItemRepository.findAllByOrderId(order.getOrderId());
-
-            order.setOrderItemList(orderItemList);
-        }
-
+    	User user = userRepository.findById(orderQueryParams.getUserId()).orElseThrow();
+    	
+    	Page<Order> orderList = orderRepository.findAllByUser(user, pageable);
+    	
         return orderList;
     }
 
     @Override
     public Order getOrderById(Integer orderId) {
-        Order order = orderRepository.getReferenceById(orderId);
-
-        List<OrderItem> orderItemList = orderItemRepository.findAllByOrderId(orderId);
-
-        order.setOrderItemList(orderItemList);
-
+        Order order = orderRepository.findById(orderId).orElseThrow();
+        
         return order;
     }
 
     @Transactional
     @Override
     public Integer createOrder(Integer userId, CreateOrderRequest createOrderRequest) {
-        Optional<User> user = userRepository.findById(userId);
-
         // 檢查 user 是否存在
-        if (!user.isPresent()) {
+        if (!userExists(userId)) {
             log.warn("該 userId {} 不存在", userId);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         
         BigDecimal totalAmount = BigDecimal.valueOf(0);
-        ArrayList<OrderItem> orderItemList = new ArrayList<OrderItem>();
+        List<OrderItem> orderItems = new ArrayList<OrderItem>();
         
-        for (BuyItem buyItem: createOrderRequest.getBuyItemList()) {
+        for (BuyItem buyItem: createOrderRequest.getBuyItems()) {
             Product product = productRepository.getReferenceById(buyItem.getProductId());
 
             // 檢查 product 是否存在、庫存是否足夠
@@ -134,76 +121,91 @@ public class OrderServiceImpl implements OrderService {
             orderItem.setQuantity(buyItem.getQuantity());
             orderItem.setAmount(amount);
 
-            orderItemList.add(orderItem);
+            orderItems.add(orderItem);
         }
 
         // 創建訂單
         Order order = new Order();
         
-        order.setUserId(userId);
+        User user = userRepository.getReferenceById(userId);
+        
+        order.setUser(user);
         order.setTotalAmount(totalAmount);
         
         Date now = new Date();
         
         order.setCreatedDate(now);
         order.setLastModifiedDate(now);
+       
+
+        for (OrderItem orderItem: orderItems) {
+        	orderItem.setOrder(order);
+        }
+        order.setOrderItems(orderItems);
         
         order = orderRepository.save(order);
         
-        for (OrderItem orderItem: orderItemList) {
-        	orderItem.setOrderId(order.getOrderId());
-        }
-        
-        orderItemList = (ArrayList<OrderItem>) orderItemRepository.saveAll(orderItemList);
+        orderItems = orderItemRepository.saveAll(orderItems);
         
         return order.getOrderId();
     }
 
 	@Override
 	public String checkout(Integer userId, Integer orderId) {
-		Optional<Order> optionalOrder = orderRepository.findById(orderId);
-		Optional<User> optionalUser = userRepository.findById(userId);
-
-        // 檢查 user 是否存在
-        if (!optionalUser.isPresent()) {
+		// 檢查 user 是否存在
+        if (!userExists(userId)) {
             log.warn("該 userId {} 不存在", userId);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         
 		// 檢查 order 是否存在
-        if (!optionalOrder.isPresent()) {
+        if (!orderExists(orderId)) {
             log.warn("該 orderId {} 不存在", orderId);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
+       
+        User user = userRepository.findById(userId).orElseThrow();
         
-        Order order = orderRepository.getReferenceById(orderId);
-
         // 檢查此 order 屬於此 user
-        if (order.getUserId() != userId) {
+        if (!orderRepository.existsByUser(user)) {
             log.warn("該 orderId {} 不屬於該 userId {}", orderId, userId);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         
 		AllInOne all = new AllInOne("");
+		Order order = orderRepository.findById(orderId).orElseThrow();
 		
-		// 轉換為訂單格式
 		String uuId = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 20);
+		
+		// 產生訂單
+		String form = generateCheckOutForm(all, order, uuId);
+		
+		order.setUuid(uuId);
+		orderRepository.save(order);
+		
+		return form;
+	}
+	
+	private String generateCheckOutForm(AllInOne all, Order order, String uuId) {
+		// 轉換為綠界訂單格式
+		
 	    String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
 		String totalAmount = String.valueOf(order.getTotalAmount().intValue());
 		
-		StringBuilder orderItemsDetail = new StringBuilder();
+		StringBuilder orderDetail = new StringBuilder();
 		
-		List<OrderItem> orderItems = orderItemRepository.findAllByOrderId(orderId);
+		List<OrderItem> orderItems = orderItemRepository.findAllByOrder(order);
 
+		// 建立綠界訂單內容
 		for (OrderItem orderItem: orderItems) {
 			Integer productId = orderItem.getProductId();
-			Product product = productRepository.getReferenceById(productId);
+			Product product = productRepository.findById(productId).orElseThrow();
 			
 			String productName = product.getProductName();
 			String quantity = String.valueOf(orderItem.getQuantity());
 			String amount = String.valueOf(orderItem.getAmount().intValue());
 			
-			orderItemsDetail.append(String.format("[%s * %s = %s]", productName, quantity, amount));
+			orderDetail.append(String.format("[%s * %s = %s]", productName, quantity, amount));
 		}
     	
 		// 產生訂單
@@ -211,13 +213,23 @@ public class OrderServiceImpl implements OrderService {
 		obj.setMerchantTradeNo(uuId);
 		obj.setMerchantTradeDate(now);
 		obj.setTotalAmount(totalAmount);		
-		obj.setTradeDesc(orderId.toString());
-		obj.setItemName(orderItemsDetail.toString());
-		obj.setReturnURL("http://localhost:8080");
+		obj.setTradeDesc(order.getOrderId().toString());
+		obj.setItemName(orderDetail.toString());
+		obj.setReturnURL("http://192.168.1.37:8080/callback");
 		obj.setNeedExtraPaidInfo("N");
+		// 商店轉跳網址
+		obj.setClientBackURL("http://192.168.1.37:8080/");
 		
-		String form = all.aioCheckOut(obj, null);
+		return all.aioCheckOut(obj, null); 
 		
-		return form;
 	}
+
+	private boolean userExists(Integer userId) {
+        return userRepository.existsById(userId);
+    }
+	
+	private boolean orderExists(Integer orderId) {
+        return orderRepository.existsById(orderId);
+    }
+	
 }

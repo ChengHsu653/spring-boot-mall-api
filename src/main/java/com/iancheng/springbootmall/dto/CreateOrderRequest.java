@@ -7,13 +7,13 @@ import java.util.List;
 public class CreateOrderRequest {
 
     @NotEmpty
-    private List<BuyItem> buyItemList;
+    private List<BuyItem> buyItems;
 
-    public List<BuyItem> getBuyItemList() {
-        return buyItemList;
+    public List<BuyItem> getBuyItems() {
+        return buyItems;
     }
 
-    public void setBuyItemList(List<BuyItem> buyItemList) {
-        this.buyItemList = buyItemList;
+    public void setBuyItemList(List<BuyItem> buyItems) {
+        this.buyItems = buyItems;
     }
 }

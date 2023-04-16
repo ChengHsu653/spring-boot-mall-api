@@ -4,25 +4,30 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.annotations.Proxy;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "`order`")
+@Proxy(lazy = false)
 public class Order {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "order_id")
     private Integer orderId;
-	
-	@Column(name = "user_id")
-    private Integer userId;
 	
 	@Column(name = "total_amount")
     private BigDecimal totalAmount;
@@ -33,8 +38,16 @@ public class Order {
 	@Column(name = "last_modified_date")
     private Date lastModifiedDate;
 
-    @Transient
-    private List<OrderItem> orderItemList;
+    @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fk_user_id")
+	private User user;
+    
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
+    @JsonIgnore // Why?
+    private List<OrderItem> orderItems;
+    
+    @Column(name = "uuid")
+    private String uuid;
 
     
 	public Integer getOrderId() {
@@ -43,14 +56,6 @@ public class Order {
 
 	public void setOrderId(Integer orderId) {
 		this.orderId = orderId;
-	}
-
-	public Integer getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Integer userId) {
-		this.userId = userId;
 	}
 
 	public BigDecimal getTotalAmount() {
@@ -77,11 +82,29 @@ public class Order {
 		this.lastModifiedDate = lastModifiedDate;
 	}
 
-	public List<OrderItem> getOrderItemList() {
-		return orderItemList;
+	public List<OrderItem> getOrderItems() {
+		return orderItems;
 	}
 
-	public void setOrderItemList(List<OrderItem> orderItemList) {
-		this.orderItemList = orderItemList;
+	public void setOrderItems(List<OrderItem> orderItems) {
+		this.orderItems = orderItems;
 	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+	
+	
 }

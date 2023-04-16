@@ -2,14 +2,20 @@ package com.iancheng.springbootmall.model;
 
 import java.math.BigDecimal;
 
+import org.hibernate.annotations.Proxy;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
+@Proxy(lazy = false)
 @Entity
 @Table(name = "`order_item`")
 public class OrderItem {
@@ -19,8 +25,9 @@ public class OrderItem {
 	@Column(name = "order_item_id")
     private Integer orderItemId;
 	
-	@Column(name = "order_id")
-    private Integer orderId;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "fk_order_id")
+    private Order order;
 	
 	@Column(name = "product_id")
     private Integer productId;
@@ -44,22 +51,6 @@ public class OrderItem {
 
 	public void setOrderItemId(Integer orderItemId) {
 		this.orderItemId = orderItemId;
-	}
-
-	public Integer getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(Integer orderId) {
-		this.orderId = orderId;
-	}
-
-	public Integer getProductId() {
-		return productId;
-	}
-
-	public void setProductId(Integer productId) {
-		this.productId = productId;
 	}
 
 	public Integer getQuantity() {
@@ -93,4 +84,22 @@ public class OrderItem {
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
+
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
+	}
+
+	public Integer getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Integer productId) {
+		this.productId = productId;
+	}
+	
+	
 }

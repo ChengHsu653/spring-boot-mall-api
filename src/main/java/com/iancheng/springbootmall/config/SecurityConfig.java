@@ -34,10 +34,11 @@ public class SecurityConfig {
 		http
         .csrf().disable()
         .authorizeHttpRequests()
-        .requestMatchers("/users/*/orders/*").hasRole("MEMBER")
+        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+        .requestMatchers("/users/*/orders").hasRole("MEMBER")
         .requestMatchers("/users/*").permitAll()
         .requestMatchers(HttpMethod.GET, "/products").permitAll()
-        .requestMatchers(HttpMethod.POST, "/products/*").hasRole("ADMIN")
+        .requestMatchers(HttpMethod.POST, "/products").permitAll()//.hasRole("ADMIN")
         .requestMatchers(HttpMethod.PUT, "/products/*").hasRole("ADMIN")
         .requestMatchers(HttpMethod.DELETE, "/products/*").hasRole("ADMIN")
         .anyRequest().authenticated()

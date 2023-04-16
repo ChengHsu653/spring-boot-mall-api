@@ -43,15 +43,13 @@ public class ProductServiceImpl implements ProductService {
     	
     	String search = productQueryParams.getSearch();
     	
-    	if (category != null && search != null) {
-    		return productRepository.findAllByProductNameContainingAndCategory(search, category, pageable);
-    	} else if (search != null) {
-    		return productRepository.findAllByProductNameContaining(search, pageable);
-    	} else if (category != null) {
-    		return productRepository.findAllByCategory(category, pageable);
-    	} else {
-    		return productRepository.findAll(pageable);
-    	}
+    	if (category == null && search == null) return productRepository.findAll(pageable);
+    	
+    	if (category == null) return productRepository.findAllByProductNameContaining(search, pageable);    		
+    	
+    	if (search == null) return productRepository.findAllByCategory(category, pageable);    		
+    	
+    	return productRepository.findAllByProductNameContainingAndCategory(search, category, pageable);  	
     }
 
     @Override

@@ -18,11 +18,12 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.annotations.Proxy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
+@Proxy(lazy = false)
 @Entity
 @Table(name = "`user`")
 public class User implements UserDetails{
@@ -54,6 +55,15 @@ public class User implements UserDetails{
     
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
+    
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders;
+    
+    @Transient
+    private String refreshToken;
+    
+    @Transient
+    private String accessToken;
     
   
     @Override
@@ -141,6 +151,22 @@ public class User implements UserDetails{
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getRefreshToken() {
+		return refreshToken;
+	}
+
+	public void setRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
+	}
+
+	public String getAccessToken() {
+		return accessToken;
+	}
+
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
 	}
     
 	

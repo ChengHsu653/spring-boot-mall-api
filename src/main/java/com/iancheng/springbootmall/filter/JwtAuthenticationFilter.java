@@ -3,6 +3,7 @@ package com.iancheng.springbootmall.filter;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,7 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 			@NonNull HttpServletResponse response,
 			@NonNull FilterChain filterChain
 	)throws ServletException, IOException {
-		final String authHeader = request.getHeader("Authorization");
+		final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 		final String jwt;
 		final String userEmail;
 		
@@ -55,7 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 		if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 			UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 			boolean isTokenValid = tokenRepository.findByToken(jwt)
-												  .map(t -> !t.isExpired() && !t.isRevoked())
+												  .map(token -> !token.isExpired() && !token.isRevoked())
 												  .orElse(false);
 			
 			if (jwtService.isTokenValid(jwt, userDetails) && isTokenValid) {

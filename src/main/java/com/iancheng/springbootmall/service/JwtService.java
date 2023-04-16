@@ -21,6 +21,8 @@ public interface JwtService {
 			UserDetails userDetails
 	);
 	
+	public String generateRefreshToken(UserDetails userDetails);
+	
 	public boolean isTokenValid(String token, UserDetails userDetails);
 	
 }

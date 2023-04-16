@@ -11,10 +11,11 @@ import com.iancheng.springbootmall.model.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer>{
-
+	
+	Page<Product> findAllByProductNameContainingAndCategory(String search, ProductCategory category, Pageable pageable);
+	
 	Page<Product> findAllByProductNameContaining(String search, Pageable pageable);
 	
 	Page<Product> findAllByCategory(ProductCategory category, Pageable pageable);
 	
-	Page<Product> findAllByProductNameContainingAndCategory(String search, ProductCategory category, Pageable pageable);
 }
