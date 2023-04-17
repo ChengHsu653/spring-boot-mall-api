@@ -4,8 +4,12 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.iancheng.springbootmall.constant.PaymentStatus;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -43,6 +47,13 @@ public class Order {
     @Column(name = "uuid")
     private String uuid;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_status")
+    private PaymentStatus paymentStatus; 
+    
+    @Column(name = "payment_date")
+    private String PaymentDate;
+    
     
 	public Integer getOrderId() {
 		return orderId;
@@ -98,6 +109,22 @@ public class Order {
 
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
+	}
+
+	public PaymentStatus getPaymentStatus() {
+		return paymentStatus;
+	}
+
+	public void setPaymentStatus(PaymentStatus paymentStatus) {
+		this.paymentStatus = paymentStatus;
+	}
+
+	public String getPaymentDate() {
+		return PaymentDate;
+	}
+
+	public void setPaymentDate(String paymentDate) {
+		PaymentDate = paymentDate;
 	}
 	
 	

@@ -15,7 +15,9 @@ import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -73,5 +75,13 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(allPayAPIForm);
     }
     
-    
+    @Tag(name = "callback")
+	@RequestMapping(value="/callback",
+    				method=RequestMethod.POST,
+    				consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public void callback(
+			@RequestBody MultiValueMap<String, String> formData
+	) {
+    	orderService.callback(formData);
+	}
 }

@@ -47,4 +47,6 @@ public class RedirectController {
 	) {
 		return userService.resetPassword(email, password, confirmPassword) == true ? "resetSuccess":"resetFail";
 	}
+	
+	
 }

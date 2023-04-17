@@ -19,4 +19,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer>{
 	
 	@Query("SELECT o FROM Order o JOIN FETCH o.orderItems")
 	Order getOrderById(Integer id);
+	
+	Order findOrderByUuid(String uuid);
 }

@@ -26,9 +26,6 @@ public class EmailServiceImpl implements EmailService{
 	@Autowired
 	private JavaMailSender javaMailSender;
 	
-	@Autowired
-	private UserRepository userRepository;
-	
 	@Value("${spring.mail.username}") 
 	private String sender;
 	
@@ -62,8 +59,6 @@ public class EmailServiceImpl implements EmailService{
             
             log.info("驗證郵件 Email {} 寄送成功!", user.getEmail());
         } catch (Exception e) {
-        	userRepository.delete(user);
-        	
         	log.error("驗證郵件 Email {} 寄送失敗!", user.getEmail());
         	throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }

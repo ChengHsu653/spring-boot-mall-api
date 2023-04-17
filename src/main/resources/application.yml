@@ -1,4 +1,7 @@
 spring:
+  application:
+    name: SPRING-BOOT-MALL
+    
   profiles:
     active: dev        
  
@@ -13,9 +16,11 @@ spring:
           starttls:
             enable: 'true'
           auth: 'true'
+          
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH-mm-ss
+    
   thymeleaf:
     cache: false
     prefix: classpath:/templates/
@@ -23,13 +28,17 @@ spring:
     encoding: UTF-8
     mode: HTML
     
+    
 application:
+  host-url: https://4312-220-133-92-216.ngrok-free.app 
+  client-back-url: https://4312-220-133-92-216.ngrok-free.app 
   security:
     jwt:
       secret-key: 5468576D5A7134743677397A24432646294A404E635266556A586E3272357538
       expiration: 86400000 # a day
       refresh-token:
         expiration: 604800000 # 7 days
+       
        
 springdoc:
   swagger-ui:

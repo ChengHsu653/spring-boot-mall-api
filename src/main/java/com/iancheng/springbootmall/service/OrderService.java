@@ -6,6 +6,7 @@ import com.iancheng.springbootmall.model.Order;
 
 
 import org.springframework.data.domain.Page;
+import org.springframework.util.MultiValueMap;
 
 public interface OrderService {
 
@@ -16,4 +17,6 @@ public interface OrderService {
     Integer createOrder(Integer userId, CreateOrderRequest createOrderRequest);
 
 	String checkout(Integer userId, Integer orderId);
+
+	void callback(MultiValueMap<String, String> formData);
 }

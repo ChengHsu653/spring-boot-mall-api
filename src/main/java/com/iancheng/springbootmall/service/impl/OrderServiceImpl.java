@@ -1,5 +1,6 @@
 package com.iancheng.springbootmall.service.impl;
 
+import com.iancheng.springbootmall.constant.PaymentStatus;
 import com.iancheng.springbootmall.dto.BuyItem;
 import com.iancheng.springbootmall.dto.CreateOrderRequest;
 import com.iancheng.springbootmall.dto.OrderQueryParams;
@@ -19,6 +20,7 @@ import ecpay.payment.integration.domain.AioCheckOutALL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +28,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
@@ -53,6 +56,11 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private UserRepository userRepository;
 
+    @Value("${application.host-url}")
+    private String hostUrl;
+    
+    @Value("${application.client-back-url}")
+    private String clientBackUrl;
 
     @Override
     public Page<Order> getOrders(OrderQueryParams orderQueryParams) {
@@ -136,7 +144,7 @@ public class OrderServiceImpl implements OrderService {
         
         order.setCreatedDate(now);
         order.setLastModifiedDate(now);
-       
+        order.setPaymentStatus(PaymentStatus.UNPAY);
 
         for (OrderItem orderItem: orderItems) {
         	orderItem.setOrder(order);
@@ -215,21 +223,37 @@ public class OrderServiceImpl implements OrderService {
 		obj.setTotalAmount(totalAmount);		
 		obj.setTradeDesc(order.getOrderId().toString());
 		obj.setItemName(orderDetail.toString());
-		obj.setReturnURL("http://192.168.1.37:8080/callback");
+		obj.setReturnURL(hostUrl + "/callback");
 		obj.setNeedExtraPaidInfo("N");
 		// 商店轉跳網址
-		obj.setClientBackURL("http://192.168.1.37:8080/");
+		obj.setClientBackURL(clientBackUrl);
 		
 		return all.aioCheckOut(obj, null); 
 		
 	}
 
+
+	@Override
+	public void callback(MultiValueMap<String, String> formData) {
+		String rtnCode = formData.get("RtnCode").get(0);
+		String merchantTradeNo = formData.get("MerchantTradeNo").get(0);
+		String paymentDate = formData.get("PaymentDate").get(0);
+		
+		Order order = orderRepository.findOrderByUuid(merchantTradeNo);
+		
+		if (rtnCode.equals("1")) order.setPaymentStatus(PaymentStatus.PAID);
+		else order.setPaymentStatus(PaymentStatus.FAIL);
+		
+		order.setPaymentDate(paymentDate);
+		
+		orderRepository.save(order);
+	}
+	
 	private boolean userExists(Integer userId) {
-        return userRepository.existsById(userId);
-    }
+		return userRepository.existsById(userId);
+	}
 	
 	private boolean orderExists(Integer orderId) {
-        return orderRepository.existsById(orderId);
-    }
-	
+		return orderRepository.existsById(orderId);
+	}
 }
