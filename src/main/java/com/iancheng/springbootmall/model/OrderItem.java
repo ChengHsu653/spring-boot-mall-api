@@ -2,7 +2,7 @@ package com.iancheng.springbootmall.model;
 
 import java.math.BigDecimal;
 
-import org.hibernate.annotations.Proxy;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,7 +15,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
-@Proxy(lazy = false)
 @Entity
 @Table(name = "`order_item`")
 public class OrderItem {
@@ -27,6 +26,7 @@ public class OrderItem {
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "fk_order_id")
+	@JsonIgnore
     private Order order;
 	
 	@Column(name = "product_id")

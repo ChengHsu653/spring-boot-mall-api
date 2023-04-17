@@ -4,10 +4,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.annotations.Proxy;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -21,7 +17,6 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "`order`")
-@Proxy(lazy = false)
 public class Order {
 	
 	@Id
@@ -38,12 +33,11 @@ public class Order {
 	@Column(name = "last_modified_date")
     private Date lastModifiedDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "fk_user_id")
 	private User user;
     
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
-    @JsonIgnore // Why?
     private List<OrderItem> orderItems;
     
     @Column(name = "uuid")
