@@ -29,19 +29,22 @@ public class SecurityConfig {
 	@Autowired
 	private LogoutHandler logoutHandler;
 	
+	
+	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
         .csrf().disable()
         .authorizeHttpRequests()
         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-        .requestMatchers("/users/*/orders").hasAnyRole("MEMBER", "ADMIN")
-        .requestMatchers("/users/*").permitAll()
-        .requestMatchers("/callback").permitAll()
-        .requestMatchers(HttpMethod.GET, "/products").permitAll()
-        .requestMatchers(HttpMethod.POST, "/products").permitAll()//.hasRole("ADMIN")
-        .requestMatchers(HttpMethod.PUT, "/products/*").hasRole("ADMIN")
-        .requestMatchers(HttpMethod.DELETE, "/products/*").hasRole("ADMIN")
+        .requestMatchers("/home").permitAll()
+        .requestMatchers("/api/users/*/orders").hasAnyRole("MEMBER", "ADMIN")
+        .requestMatchers("/api/users/*").permitAll()
+        .requestMatchers("/api/callback").permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/products", "/api/products/*").permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/products").permitAll()//.hasRole("ADMIN")
+        .requestMatchers(HttpMethod.PUT, "/api/products/*").hasRole("ADMIN")
+        .requestMatchers(HttpMethod.DELETE, "/api/products/*").hasRole("ADMIN")
         .anyRequest().authenticated()
         .and()
         .sessionManagement()

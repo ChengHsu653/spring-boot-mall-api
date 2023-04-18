@@ -223,10 +223,10 @@ public class OrderServiceImpl implements OrderService {
 		obj.setTotalAmount(totalAmount);		
 		obj.setTradeDesc(order.getOrderId().toString());
 		obj.setItemName(orderDetail.toString());
-		obj.setReturnURL(hostUrl + "/callback");
+		obj.setReturnURL(hostUrl + "/api/callback");
 		obj.setNeedExtraPaidInfo("N");
 		// 商店轉跳網址
-		obj.setClientBackURL(clientBackUrl);
+		obj.setClientBackURL(clientBackUrl + "/home");
 		
 		return all.aioCheckOut(obj, null); 
 		

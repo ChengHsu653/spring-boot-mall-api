@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.iancheng.springbootmall.model.User;
-import com.iancheng.springbootmall.repository.UserRepository;
 import com.iancheng.springbootmall.service.EmailService;
 
 import jakarta.mail.internet.MimeMessage;
@@ -29,12 +28,14 @@ public class EmailServiceImpl implements EmailService{
 	@Value("${spring.mail.username}") 
 	private String sender;
 	
+	@Value("${application.host-url}") 
+	private String hostUrl;
 	
 	@Override
 	public void sendValidationLink(User user) {
 		try {
             var link = String.format(
-            		"http://localhost:8080/users/verify?email=%s&token=%s",
+            		hostUrl + "/api/users/verify?email=%s&token=%s",
             		user.getEmail(),
             		user.getPassword());
             
@@ -67,7 +68,7 @@ public class EmailServiceImpl implements EmailService{
 	@Override
 	public void sendPasswordResetLink(User user) {
 		try {
-            var link = "http://localhost:8080/users/reset_form";
+            var link = hostUrl + "/api/users/reset_form";
             
             var anchor = String.format(
             		"<a href='%s'>重設密碼</a>",
