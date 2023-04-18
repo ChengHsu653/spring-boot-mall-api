@@ -30,7 +30,8 @@ spring:
     
     
 application:
-  host-url: https://1c14-118-163-218-100.ngrok-free.app 
+  host-url: https://1c14-118-163-218-100.ngrok-free.app
+  client-url: http://127.0.0.1:5500 
   client-back-url: https://1c14-118-163-218-100.ngrok-free.app 
   security:
     jwt:

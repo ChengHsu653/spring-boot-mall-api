@@ -1,10 +1,15 @@
 package com.iancheng.springbootmall.config;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -12,6 +17,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.iancheng.springbootmall.filter.JwtAuthenticationFilter;
 
@@ -29,12 +37,12 @@ public class SecurityConfig {
 	@Autowired
 	private LogoutHandler logoutHandler;
 	
-	
+	@Value("${application.client-url}")
+	private String clientUrl;
 	
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
-        .csrf().disable()
         .authorizeHttpRequests()
         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
         .requestMatchers("/home").permitAll()
@@ -47,12 +55,13 @@ public class SecurityConfig {
         .requestMatchers(HttpMethod.DELETE, "/api/products/*").hasRole("ADMIN")
         .anyRequest().authenticated()
         .and()
-        .sessionManagement()
-        	.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .cors(Customizer.withDefaults())
+        .csrf().disable()
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
         .authenticationProvider(authenticationProvider)
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-	    .logout()
+        .logout()
 	    	.logoutUrl("/users/logout")
 	    	.addLogoutHandler(logoutHandler)
 	    	.logoutSuccessHandler((request, response, authentication) 
@@ -60,4 +69,17 @@ public class SecurityConfig {
 		
 	    return http.build();
 	}
+	
+	@Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        
+        configuration.setAllowedOrigins(Arrays.asList(clientUrl));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(List.of("Authorization"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        
+        return source;
+    }
 }
