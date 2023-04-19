@@ -28,17 +28,24 @@ import com.iancheng.springbootmall.filter.JwtAuthenticationFilter;
 @EnableWebSecurity
 public class SecurityConfig {
 	
-	@Autowired
 	private JwtAuthenticationFilter jwtAuthFilter;
-	
-	@Autowired
 	private AuthenticationProvider authenticationProvider;
-	
-	@Autowired
 	private LogoutHandler logoutHandler;
 	
-	@Value("${application.client-url}")
+	@Value("${application.client-url}") 
 	private String clientUrl;
+	
+	@Autowired
+	public SecurityConfig(
+			JwtAuthenticationFilter jwtAuthFilter,
+			AuthenticationProvider authenticationProvider,
+			LogoutHandler logoutHandler
+	) {
+		this.jwtAuthFilter = jwtAuthFilter;
+		this.authenticationProvider = authenticationProvider;
+		this.logoutHandler = logoutHandler;
+	}
+
 	
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -74,7 +81,7 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         
-        configuration.setAllowedOrigins(Arrays.asList(clientUrl));
+        configuration.setAllowedOrigins(Arrays.asList("*"));//Arrays.asList(clientUrl, "http://localhost:5500", "chrome-extension://aejoelaoggembcahagimdiliamlcdmfm"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("Authorization"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

@@ -24,10 +24,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class ProductController {
 
-    @Autowired
     private ProductService productService;
     
-    @Tag(name = "getProducts")
+    @Autowired
+    public ProductController(ProductService productService) {
+		this.productService = productService;
+	}
+    
+
+	@Tag(name = "getProducts")
     @GetMapping("/products")
     public ResponseEntity<PageResponse<Product>> getProducts(
             // 查詢條件 Filtering

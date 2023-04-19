@@ -25,8 +25,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class OrderController {
 
-    @Autowired
-    private OrderService orderService;
+	private OrderService orderService;
+
+	@Autowired
+    public OrderController(OrderService orderService) {
+		this.orderService = orderService;
+	}
+
 
     @Tag(name = "getOrders")
     @GetMapping("/users/{userId}/orders")

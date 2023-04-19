@@ -29,11 +29,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/api")
 public class UserController {
 
-	@Autowired
 	private UserService userService;
 
-	@Autowired
 	private EmailService emailService;
+	
+	@Autowired
+	public UserController(UserService userService, EmailService emailService) {
+		super();
+		this.userService = userService;
+		this.emailService = emailService;
+	}
 
 	
 	@Tag(name = "register")
