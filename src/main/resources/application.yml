@@ -9,7 +9,7 @@ spring:
     host: smtp.gmail.com
     port: '587'
     username: dunz.zheng@gmail.com
-    password: zojczhpyoxbrsqqos
+    password: zojczhpyoxbrsqos
     properties:
       mail:
         smtp:
@@ -27,18 +27,6 @@ spring:
     suffix: .html
     encoding: UTF-8
     mode: HTML
-    
-    
-application:
-  host-url: https://1c14-118-163-218-100.ngrok-free.app
-  client-url: http://127.0.0.1:5500 
-  client-back-url: https://1c14-118-163-218-100.ngrok-free.app 
-  security:
-    jwt:
-      secret-key: 5468576D5A7134743677397A24432646294A404E635266556A586E3272357538
-      expiration: 86400000 # a day
-      refresh-token:
-        expiration: 604800000 # 7 days
        
        
 springdoc:

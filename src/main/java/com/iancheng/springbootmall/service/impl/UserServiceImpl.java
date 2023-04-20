@@ -35,21 +35,23 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserServiceImpl implements UserService {
 
 	private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
-    
-    @Autowired
+
     private UserRepository userRepository;
-    
-    @Autowired
     private TokenRepository tokenRepository;
-    
-    @Autowired
     private PasswordEncoder passwordEncoder;
-    
-    @Autowired
     private JwtService jwtService;
     
-    
-    @Override
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository, TokenRepository tokenRepository,
+			PasswordEncoder passwordEncoder, JwtService jwtService) {
+		this.userRepository = userRepository;
+		this.tokenRepository = tokenRepository;
+		this.passwordEncoder = passwordEncoder;
+		this.jwtService = jwtService;
+	}
+
+
+	@Override
     public User register(UserRegisterRequest userRegisterRequest) {
     	
     	// 檢查註冊的 email

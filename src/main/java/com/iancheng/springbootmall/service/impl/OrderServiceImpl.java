@@ -44,24 +44,31 @@ public class OrderServiceImpl implements OrderService {
 
     private static final Logger log = LoggerFactory.getLogger(OrderServiceImpl.class);
     
-    @Autowired
     private OrderRepository orderRepository;
-    
-    @Autowired
     private OrderItemRepository orderItemRepository;
-
-    @Autowired
     private ProductRepository productRepository;
-    
-    @Autowired
     private UserRepository userRepository;
 
     @Value("${application.host-url}")
     private String hostUrl;
     
-    @Value("${application.client-back-url}")
-    private String clientBackUrl;
+    @Value("${application.client-url}")
+    private String clientUrl;
 
+    @Autowired
+    public OrderServiceImpl(
+    		OrderRepository orderRepository,
+    		OrderItemRepository orderItemRepository,
+    		ProductRepository productRepository,
+    		UserRepository userRepository
+    ) {
+    	this.orderRepository = orderRepository;
+    	this.orderItemRepository = orderItemRepository;
+    	this.productRepository = productRepository;
+    	this.userRepository = userRepository;
+    }
+    
+    
     @Override
     public Page<Order> getOrders(OrderQueryParams orderQueryParams) {
     	// 檢查 user 是否存在
@@ -226,7 +233,7 @@ public class OrderServiceImpl implements OrderService {
 		obj.setReturnURL(hostUrl + "/api/callback");
 		obj.setNeedExtraPaidInfo("N");
 		// 商店轉跳網址
-		obj.setClientBackURL(clientBackUrl + "/home");
+		obj.setClientBackURL(clientUrl);
 		
 		return all.aioCheckOut(obj, null); 
 		

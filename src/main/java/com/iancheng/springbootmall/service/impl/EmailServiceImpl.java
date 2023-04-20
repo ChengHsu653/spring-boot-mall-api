@@ -22,14 +22,19 @@ public class EmailServiceImpl implements EmailService{
 	
 	private static final Logger log = LoggerFactory.getLogger(EmailServiceImpl.class);
 
-	@Autowired
 	private JavaMailSender javaMailSender;
 	
+	@Autowired
+	public EmailServiceImpl(JavaMailSender javaMailSender) {
+		this.javaMailSender = javaMailSender;
+	}
+
 	@Value("${spring.mail.username}") 
 	private String sender;
 	
 	@Value("${application.host-url}") 
 	private String hostUrl;
+	
 	
 	@Override
 	public void sendValidationLink(User user) {

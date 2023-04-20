@@ -5,6 +5,7 @@ import java.util.List;
 public class PageResponse<T> {
     private Integer size;
     private Integer page;
+    private Integer totalPages;
     private Long total;
     private List<T> results;
 	public Integer getSize() {
@@ -30,6 +31,12 @@ public class PageResponse<T> {
 	}
 	public void setResults(List<T> results) {
 		this.results = results;
+	}
+	public Integer getTotalPages() {
+		return totalPages;
+	}
+	public void setTotalPages(Integer totalPages) {
+		this.totalPages = totalPages;
 	}
 
 

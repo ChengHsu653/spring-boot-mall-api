@@ -26,8 +26,12 @@ public class ProductServiceImpl implements ProductService {
 
 	private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
 	 
-    @Autowired
-    private ProductRepository productRepository;
+	private ProductRepository productRepository;
+
+	@Autowired
+    public ProductServiceImpl(ProductRepository productRepository) {
+		this.productRepository = productRepository;
+	}
 
     
     @Override

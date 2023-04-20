@@ -64,7 +64,7 @@ public class ProductController {
         pageResponse.setSize(productListPage.getSize());
         pageResponse.setPage(productListPage.getPageable().getPageNumber());
         pageResponse.setTotal(productListPage.getTotalElements());
-        
+        pageResponse.setTotalPages(productListPage.getTotalPages());
         return ResponseEntity.status(HttpStatus.OK).body(pageResponse);
     }
 
