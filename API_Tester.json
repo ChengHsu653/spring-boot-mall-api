@@ -4,14 +4,14 @@
     {
       "entity": {
         "type": "Project",
-        "id": "848dc8f2-06e2-4306-b101-42f72b774a13",
+        "id": "2885489a-7b8c-40f8-972a-39165c5b1cb3",
         "name": "springboot-mall"
       },
       "children": [
         {
           "entity": {
             "type": "Service",
-            "id": "02bb72e6-7ee5-4757-bd72-fd89099b8671",
+            "id": "d59640a4-51a9-4d37-a10e-55ebef966a7c",
             "name": "商品功能"
           },
           "children": [
@@ -30,7 +30,7 @@
                     "items": []
                   },
                   "bodyType": "Text",
-                  "textBody": "{\n  \"productName\":\"Toyota2\",\n  \"category\":\"CAR\",\n  \"imageUrl\":\"https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80\",\n  \"price\":1200,\n  \"stock\":100\n}"
+                  "textBody": "{\n  \"productName\":\"Product100\",\n  \"category\":\"CAR\",\n  \"imageUrl\":\"https://picsum.photos/300/300?random=1\",\n  \"description\":\"Test\",\n  \"price\":2200,\n  \"stock\":100\n}"
                 },
                 "uri": {
                   "query": {
@@ -50,7 +50,7 @@
                   "host": "localhost:8080",
                   "path": "/api/products"
                 },
-                "id": "af26523a-488a-44ff-9450-d372a7383eac",
+                "id": "f875e387-5d99-44dc-a77d-edf8db748b53",
                 "name": "createProduct",
                 "headers": [
                   {
@@ -88,7 +88,7 @@
                   "host": "localhost:8080",
                   "path": "/api/products/16"
                 },
-                "id": "be904945-4f5b-4975-9289-36ea18a7524b",
+                "id": "b112d87a-b104-4966-a2fb-a2ee8b5f5b91",
                 "name": "deleteProduct",
                 "headers": [
                   {
@@ -124,9 +124,41 @@
                     "version": "V11"
                   },
                   "host": "localhost:8080",
+                  "path": "/api/products/categories"
+                },
+                "id": "f7688678-b35b-42e2-81ad-a3f7a5c8ccbe",
+                "name": "getCategories",
+                "headers": []
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "localhost:8080",
                   "path": "/api/products/1"
                 },
-                "id": "0d6a3533-fa82-4ab0-80e1-ee807ae76784",
+                "id": "17168d5e-9def-421c-b7bf-aaf42f5a2fcc",
                 "name": "getProduct",
                 "headers": []
               }
@@ -150,7 +182,28 @@
                 "uri": {
                   "query": {
                     "delimiter": "&",
-                    "items": []
+                    "items": [
+                      {
+                        "enabled": true,
+                        "name": "page",
+                        "value": "0"
+                      },
+                      {
+                        "enabled": true,
+                        "name": "size",
+                        "value": "2"
+                      },
+                      {
+                        "enabled": true,
+                        "name": "category",
+                        "value": ""
+                      },
+                      {
+                        "enabled": true,
+                        "name": "search",
+                        "value": "1"
+                      }
+                    ]
                   },
                   "scheme": {
                     "name": "http",
@@ -159,7 +212,7 @@
                   "host": "localhost:8080",
                   "path": "/api/products"
                 },
-                "id": "92bffefd-50c1-4ce7-ba47-15ae087f2b61",
+                "id": "c061e05d-542d-4d36-9236-5772422e531f",
                 "name": "getProducts",
                 "headers": []
               }
@@ -193,7 +246,7 @@
                   "host": "localhost:8080",
                   "path": "/api/products/3"
                 },
-                "id": "63d1a962-4fca-41b3-a026-22f0dbcb38bb",
+                "id": "cca95d79-15f2-4587-a541-e34fded54369",
                 "name": "updateProduct",
                 "headers": [
                   {
@@ -209,7 +262,7 @@
         {
           "entity": {
             "type": "Service",
-            "id": "75545ca4-d40b-4a7e-bb13-030b2a7cdf4f",
+            "id": "ab783134-be66-4c48-b3a3-acac3e2ce158",
             "name": "帳號功能"
           },
           "children": [
@@ -242,7 +295,7 @@
                   "host": "localhost:8080",
                   "path": "/api/users/forget"
                 },
-                "id": "e103f492-1e10-492b-8166-44cedca81e00",
+                "id": "c21f677c-095a-4be8-b221-797b1641db0c",
                 "name": "forgetPassword",
                 "headers": [
                   {
@@ -282,7 +335,7 @@
                   "host": "localhost:8080",
                   "path": "/api/users/login"
                 },
-                "id": "011841e6-4de8-421f-9eac-3c83060b00a1",
+                "id": "bdae2d1a-19a9-4c8c-acc6-3b6019a9d7e1",
                 "name": "login",
                 "headers": [
                   {
@@ -320,7 +373,7 @@
                   "host": "localhost:8080",
                   "path": "/users/logout"
                 },
-                "id": "932191b4-e3da-4ef0-ac4b-a775ca77a560",
+                "id": "41e05347-d896-4061-aad8-255aa34f057f",
                 "name": "logout",
                 "headers": []
               }
@@ -353,7 +406,7 @@
                   "host": "localhost:8080",
                   "path": "/users/refresh_token"
                 },
-                "id": "f48033e7-6f64-4594-86be-ae65c16a6325",
+                "id": "ea13486f-dfed-4ab2-9960-c88bff1c6cdd",
                 "name": "refreshToken",
                 "headers": [
                   {
@@ -393,7 +446,7 @@
                   "host": "localhost:8080",
                   "path": "/api/users/register"
                 },
-                "id": "5218d8bc-a8c5-4f32-b65a-c245fbc4aee9",
+                "id": "ff2752b0-e1ac-4b3b-b5bb-6f06f469ad22",
                 "name": "register",
                 "headers": [
                   {
@@ -409,7 +462,7 @@
         {
           "entity": {
             "type": "Service",
-            "id": "fa156408-a6d6-45ac-aea9-98081141173c",
+            "id": "ffbd4e31-e782-4de8-b858-44c359c12d8c",
             "name": "訂單功能"
           },
           "children": [
@@ -441,7 +494,7 @@
                   "host": "localhost:8080",
                   "path": "/api/users/1/orders/1"
                 },
-                "id": "f1c0b2db-3801-4d7b-b414-54229d5ff5dd",
+                "id": "a139645d-580a-48c4-af5a-2efab3bcd587",
                 "name": "checkOut",
                 "headers": [
                   {
@@ -486,7 +539,7 @@
                   "host": "localhost:8080",
                   "path": "/api/users/1/orders"
                 },
-                "id": "f63e125f-0eed-4d16-bffd-ce37e8ccb979",
+                "id": "5f11c883-e71e-4d0f-b53f-c6374ce999d5",
                 "name": "createOrder",
                 "headers": [
                   {
@@ -540,7 +593,7 @@
                   "host": "localhost:8080",
                   "path": "/api/users/1/orders"
                 },
-                "id": "0215e738-c74c-461f-aaf2-89b8c83e9df8",
+                "id": "83adf0e7-b5f0-45f6-848a-6a77fa6f7e3c",
                 "name": "getOrders",
                 "headers": [
                   {

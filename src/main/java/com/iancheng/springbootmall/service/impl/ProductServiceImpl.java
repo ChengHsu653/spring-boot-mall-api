@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -116,4 +117,12 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProductById(Integer productId) {
     	productRepository.deleteById(productId);
     }
+
+
+	@Override
+	public ProductCategory[] getProductCategories() {
+		ProductCategory[] categories = ProductCategory.values();
+		
+		return categories;
+	}
 }

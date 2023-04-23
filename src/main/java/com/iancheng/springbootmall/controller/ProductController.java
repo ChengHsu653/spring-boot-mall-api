@@ -11,6 +11,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -114,5 +117,13 @@ public class ProductController {
         productService.deleteProductById(productId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+    
+    @Tag(name = "getProductCategories")
+    @GetMapping("/products/categories")
+    public ResponseEntity<ProductCategory[]> getProductCategories() {
+    	ProductCategory[] ProductCategories = productService.getProductCategories();
+    	
+        return ResponseEntity.status(HttpStatus.OK).body(ProductCategories);
     }
 }
