@@ -85,9 +85,9 @@ public class OrderServiceImpl implements OrderService {
     	
     	User user = userRepository.findById(orderQueryParams.getUserId()).orElseThrow();
     	
-    	Page<Order> orderList = orderRepository.findAllByUser(user, pageable);
+    	Page<Order> orders = orderRepository.findAllByUser(user, pageable);
     	
-        return orderList;
+        return orders;
     }
 
     @Override
@@ -132,10 +132,9 @@ public class OrderServiceImpl implements OrderService {
 
             // 轉換 BuyItem to OrderItem
             OrderItem orderItem = new OrderItem();
-            orderItem.setProductId(buyItem.getProductId());
             orderItem.setQuantity(buyItem.getQuantity());
-            orderItem.setAmount(amount);
-
+            orderItem.setAmount(amount);    
+            orderItem.setProduct(product);
             orderItems.add(orderItem);
         }
 
@@ -213,9 +212,7 @@ public class OrderServiceImpl implements OrderService {
 
 		// 建立綠界訂單內容
 		for (OrderItem orderItem: orderItems) {
-			Integer productId = orderItem.getProductId();
-			Product product = productRepository.findById(productId).orElseThrow();
-			
+			Product product = orderItem.getProduct();
 			String productName = product.getProductName();
 			String quantity = String.valueOf(orderItem.getQuantity());
 			String amount = String.valueOf(orderItem.getAmount().intValue());
@@ -236,7 +233,6 @@ public class OrderServiceImpl implements OrderService {
 		obj.setClientBackURL(clientUrl);
 		
 		return all.aioCheckOut(obj, null); 
-		
 	}
 
 

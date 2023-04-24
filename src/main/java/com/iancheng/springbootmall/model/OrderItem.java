@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -12,8 +13,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "`order_item`")
@@ -29,21 +30,16 @@ public class OrderItem {
 	@JsonIgnore
     private Order order;
 	
-	@Column(name = "product_id")
-    private Integer productId;
-	
 	@Column(name = "quantity")
     private Integer quantity;
 	
 	@Column(name = "amount")
     private BigDecimal amount;
+   
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_product_id", referencedColumnName = "product_id")
+    private Product product;
     
-    @Transient
-    private String productName;
-    
-    @Transient
-    private String imageUrl;
-
     
 	public Integer getOrderItemId() {
 		return orderItemId;
@@ -69,22 +65,6 @@ public class OrderItem {
 		this.amount = amount;
 	}
 
-	public String getProductName() {
-		return productName;
-	}
-
-	public void setProductName(String productName) {
-		this.productName = productName;
-	}
-
-	public String getImageUrl() {
-		return imageUrl;
-	}
-
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
-
 	public Order getOrder() {
 		return order;
 	}
@@ -93,12 +73,12 @@ public class OrderItem {
 		this.order = order;
 	}
 
-	public Integer getProductId() {
-		return productId;
+	public Product getProduct() {
+		return product;
 	}
 
-	public void setProductId(Integer productId) {
-		this.productId = productId;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 	
 	

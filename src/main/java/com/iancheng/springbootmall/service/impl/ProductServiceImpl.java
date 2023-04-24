@@ -1,11 +1,7 @@
 package com.iancheng.springbootmall.service.impl;
 
-import com.iancheng.springbootmall.constant.ProductCategory;
-import com.iancheng.springbootmall.dto.ProductQueryParams;
-import com.iancheng.springbootmall.dto.ProductRequest;
-import com.iancheng.springbootmall.model.Product;
-import com.iancheng.springbootmall.repository.ProductRepository;
-import com.iancheng.springbootmall.service.ProductService;
+import java.util.Date;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +14,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import com.iancheng.springbootmall.constant.ProductCategory;
+import com.iancheng.springbootmall.dto.ProductQueryParams;
+import com.iancheng.springbootmall.dto.ProductRequest;
+import com.iancheng.springbootmall.model.Product;
+import com.iancheng.springbootmall.repository.ProductRepository;
+import com.iancheng.springbootmall.service.ProductService;
 
 @Service
 public class ProductServiceImpl implements ProductService {

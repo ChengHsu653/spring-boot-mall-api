@@ -1,5 +1,8 @@
 package com.iancheng.springbootmall.model;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 import com.iancheng.springbootmall.constant.ProductCategory;
 
 import jakarta.persistence.Column;
@@ -9,11 +12,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-
-import java.math.BigDecimal;
-import java.util.Date;
 
 
 @Entity

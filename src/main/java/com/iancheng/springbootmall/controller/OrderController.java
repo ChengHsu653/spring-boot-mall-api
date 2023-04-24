@@ -43,7 +43,7 @@ public class OrderController {
         OrderQueryParams orderQueryParams = new OrderQueryParams();
         orderQueryParams.setUserId(userId);
         orderQueryParams.setSize(size);
-        orderQueryParams.setPage(page);
+        orderQueryParams.setPage(page - 1 < 0 ? 0 : page - 1);
 
         // 取得 order list 分頁
         Page<Order> orderListPage = orderService.getOrders(orderQueryParams);
@@ -54,6 +54,7 @@ public class OrderController {
         pageResponse.setSize(orderListPage.getSize());
         pageResponse.setPage(orderListPage.getPageable().getPageNumber());
         pageResponse.setTotal(orderListPage.getTotalElements());
+        pageResponse.setTotalPages(orderListPage.getTotalPages());
         
         return ResponseEntity.status(HttpStatus.OK).body(pageResponse);
     }
