@@ -9,11 +9,20 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: update
-
-
+  mail:
+    host: smtp.gmail.com
+    port: '587'
+    username: ${PROD_MAIL_USERNAME}
+    password: ${PROD_MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: 'true'
+          auth: 'true'
 application:
-  host-url: 
-  client-url: 
+  host-url: ${PROD_HOST_URL}
+  client-url: ${PROD_CLIENT_URL}
   security:
     jwt:
       secret-key: 5468576D5A7134743677397A24432646294A404E635266556A586E3272357538

@@ -1,9 +1,19 @@
 package com.iancheng.springbootmall.controller;
 
+import java.io.IOException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.iancheng.springbootmall.dto.UserForgetRequest;
 import com.iancheng.springbootmall.dto.UserLoginRequest;
 import com.iancheng.springbootmall.dto.UserRegisterRequest;
-import com.iancheng.springbootmall.dto.UserVerifyRequest;
 import com.iancheng.springbootmall.model.User;
 import com.iancheng.springbootmall.service.EmailService;
 import com.iancheng.springbootmall.service.UserService;
@@ -13,29 +23,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
-import java.io.IOException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-@Controller
+@RestController
 @RequestMapping("/api")
 public class UserController {
 
 	private UserService userService;
-
 	private EmailService emailService;
 	
 	@Autowired
 	public UserController(UserService userService, EmailService emailService) {
-		super();
 		this.userService = userService;
 		this.emailService = emailService;
 	}
@@ -90,33 +86,4 @@ public class UserController {
 		userService.refreshToken(request, response);
 	}
 	
-	@Tag(name = "verify")
-	@GetMapping("/users/verify")
-	public String verify(
-			@RequestParam String email,
-			@RequestParam String token
-	) {
-		UserVerifyRequest userVerifyRequest = new UserVerifyRequest();
-		userVerifyRequest.setEmail(email);
-		userVerifyRequest.setToken(token);
-
-		return userService.verify(userVerifyRequest) == true ? "registerSuccess" : "registerFail";
-	}
-	
-	
-	@Tag(name = "resetForm")
-	@GetMapping("/users/reset_form")
-	public String resetForm() {
-		return "resetForm";
-	}
-
-	@Tag(name = "resetPassword")
-	@PostMapping("/users/reset")
-	public String resetPassword(
-			@RequestParam String email, 
-			@RequestParam String password,
-			@RequestParam String confirmPassword
-	) {
-		return userService.resetPassword(email, password, confirmPassword) == true ? "resetSuccess":"resetFail";
-	}
 }

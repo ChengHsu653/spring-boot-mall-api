@@ -1,34 +1,17 @@
 spring:
   application:
     name: SPRING-BOOT-MALL
-    
   profiles:
-    active: dev        
- 
-  mail:
-    host: smtp.gmail.com
-    port: '587'
-    username: dunz.zheng@gmail.com
-    password: 
-    properties:
-      mail:
-        smtp:
-          starttls:
-            enable: 'true'
-          auth: 'true'
-          
+    active: dev               
   jackson:
     time-zone: GMT+8
-    date-format: yyyy-MM-dd HH-mm-ss
-    
+    date-format: yyyy-MM-dd HH-mm-ss  
   thymeleaf:
     cache: false
     prefix: classpath:/templates/
     suffix: .html
     encoding: UTF-8
-    mode: HTML
-       
-       
+    mode: HTML     
 springdoc:
   swagger-ui:
     path: /swagger-ui
