@@ -1,5 +1,27 @@
 package com.iancheng.springbootmall.service.impl;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.iancheng.springbootmall.constant.PaymentStatus;
 import com.iancheng.springbootmall.dto.BuyItem;
 import com.iancheng.springbootmall.dto.CreateOrderRequest;
@@ -16,28 +38,6 @@ import com.iancheng.springbootmall.service.OrderService;
 
 import ecpay.payment.integration.AllInOne;
 import ecpay.payment.integration.domain.AioCheckOutALL;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -186,16 +186,18 @@ public class OrderServiceImpl implements OrderService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         
-		AllInOne all = new AllInOne("");
-		Order order = orderRepository.findById(orderId).orElseThrow();
+        String uuId = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 20);
+
+        Order order = orderRepository.findById(orderId).orElseThrow();
+
+		order.setUuid(uuId);
 		
-		String uuId = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 20);
+		order = orderRepository.save(order);
 		
 		// 產生訂單
-		String form = generateCheckOutForm(all, order, uuId);
+		AllInOne all = new AllInOne("");
 		
-		order.setUuid(uuId);
-		orderRepository.save(order);
+		String form = generateCheckOutForm(all, order, uuId);
 		
 		return form;
 	}
@@ -229,7 +231,6 @@ public class OrderServiceImpl implements OrderService {
 		obj.setItemName(orderDetail.toString());
 		obj.setReturnURL(hostUrl + "/api/callback");
 		obj.setNeedExtraPaidInfo("N");
-		// 商店轉跳網址
 		obj.setClientBackURL(clientUrl);
 		
 		return all.aioCheckOut(obj, null); 

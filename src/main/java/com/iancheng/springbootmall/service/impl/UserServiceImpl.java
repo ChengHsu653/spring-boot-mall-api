@@ -152,6 +152,7 @@ public class UserServiceImpl implements UserService {
         // 比較驗證碼
         if (user.getPassword().equals(userVerifyRequest.getToken())) {
         	user.setRole(Role.ROLE_MEMBER);
+        	user.setLastModifiedDate(new Date());
         	user = userRepository.save(user);
         	
         	return true;
@@ -219,6 +220,7 @@ public class UserServiceImpl implements UserService {
 				revokeAllUserTokens(user);
 	            saveUserToken(user, accessToken);
 				
+	            user.setLastModifiedDate(new Date());
 				user.setRefreshToken(refreshToken);
 				user.setAccessToken(accessToken);
 				
