@@ -5,10 +5,11 @@ spring:
     password: ${PROD_DB_PASSWORD}
     name: spring-boot-mall-prod-db
   jpa:
-    database-platform: org.hibernate.dialect.MySQLDialect
-    open-in-view: false
+    properties:
+      dialect: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: update
+    open-in-view: false
   mail:
     host: smtp.gmail.com
     port: '587'
