@@ -8,14 +8,13 @@ spring:
     password: root
     name: spring-boot-mall-dev-db 
   jpa:
-    database-platform: org.hibernate.dialect.MySQLDialect
+    properties:
+      dialect: org.hibernate.dialect.MySQL8Dialect 
     show-sql: true
     open-in-view: false
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        format_sql: true
+      format_sql: true
   mail:
     host: smtp.gmail.com
     port: '587'
@@ -29,7 +28,7 @@ spring:
           auth: 'true'
 application:
   host-url: https://d934-27-53-248-234.ngrok-free.app
-  client-url: http://localhost:5500
+  client-url: http://127.0.0.1:5500
   security:
     jwt:
       secret-key: 5468576D5A7134743677397A24432646294A404E635266556A586E3272357538

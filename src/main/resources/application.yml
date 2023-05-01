@@ -12,6 +12,11 @@ spring:
     suffix: .html
     encoding: UTF-8
     mode: HTML     
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 1000MB
+        
 springdoc:
   swagger-ui:
     path: /swagger-ui

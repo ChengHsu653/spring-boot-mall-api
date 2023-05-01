@@ -5,13 +5,16 @@ import java.util.Date;
 
 import com.iancheng.springbootmall.constant.ProductCategory;
 
+import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
 
@@ -31,8 +34,10 @@ public class Product {
     @Column(name = "category")
     private ProductCategory category;
 
-    @Column(name = "image_url")
-    private String imageUrl;
+    @Lob @Basic(fetch=FetchType.LAZY)
+	@Column(name="image",
+			columnDefinition="LONGBLOB")
+	private byte[] image;
 
     @Column(name = "price")
     private BigDecimal price;
@@ -74,12 +79,12 @@ public class Product {
 		this.category = category;
 	}
 
-	public String getImageUrl() {
-		return imageUrl;
+	public byte[] getImage() {
+		return image;
 	}
 
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
+	public void setImage(byte[] image) {
+		this.image = image;
 	}
 
 	public BigDecimal getPrice() {

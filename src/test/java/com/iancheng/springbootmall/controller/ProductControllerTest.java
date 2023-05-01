@@ -64,7 +64,7 @@ public class ProductControllerTest {
         ProductRequest productRequest = new ProductRequest();
         productRequest.setProductName("test food product");
         productRequest.setCategory(ProductCategory.FOOD);
-        productRequest.setImageUrl("http://test.com");
+//        productRequest.setImageUrl("http://test.com");
         productRequest.setPrice(BigDecimal.valueOf(100));
         productRequest.setStock(2);
 
@@ -111,7 +111,7 @@ public class ProductControllerTest {
         ProductRequest productRequest = new ProductRequest();
         productRequest.setProductName("test food product");
         productRequest.setCategory(ProductCategory.FOOD);
-        productRequest.setImageUrl("http://test.com");
+//        productRequest.setImageUrl("http://test.com");
         productRequest.setPrice(BigDecimal.valueOf(100));
         productRequest.setStock(2);
 
@@ -158,7 +158,7 @@ public class ProductControllerTest {
         ProductRequest productRequest = new ProductRequest();
         productRequest.setProductName("test food product");
         productRequest.setCategory(ProductCategory.FOOD);
-        productRequest.setImageUrl("http://test.com");
+//        productRequest.setImageUrl("http://test.com");
         productRequest.setPrice(BigDecimal.valueOf(100));
         productRequest.setStock(2);
 

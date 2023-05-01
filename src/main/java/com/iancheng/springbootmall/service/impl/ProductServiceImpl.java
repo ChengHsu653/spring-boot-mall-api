@@ -1,5 +1,6 @@
 package com.iancheng.springbootmall.service.impl;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
 
@@ -20,6 +21,7 @@ import com.iancheng.springbootmall.dto.ProductRequest;
 import com.iancheng.springbootmall.model.Product;
 import com.iancheng.springbootmall.repository.ProductRepository;
 import com.iancheng.springbootmall.service.ProductService;
+import com.iancheng.springbootmall.util.ImageUtil;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -62,6 +64,7 @@ public class ProductServiceImpl implements ProductService {
         
     	if (optionalProduct.isPresent()) {
             Product product = optionalProduct.get();
+//            product.setImage(ImageUtil.decompressImage(product.getImage()));
             
             return product;
         } else {
@@ -76,7 +79,14 @@ public class ProductServiceImpl implements ProductService {
     	
     	product.setProductName(productRequest.getProductName());
     	product.setCategory(productRequest.getCategory());
-    	product.setImageUrl(productRequest.getImageUrl());
+    	
+    	try {
+//			product.setImage(ImageUtil.compressImage(productRequest.getImage().getBytes()));
+			product.setImage(productRequest.getImage().getBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
     	product.setPrice(productRequest.getPrice());
     	product.setStock(productRequest.getStock());
     	product.setDescription(productRequest.getDescription());
@@ -100,10 +110,18 @@ public class ProductServiceImpl implements ProductService {
             
             product.setProductName(productRequest.getProductName());
             product.setCategory(productRequest.getCategory());
-            product.setImageUrl(productRequest.getImageUrl());
+            
+            try {
+//    			product.setImage(ImageUtil.compressImage(productRequest.getImage().getBytes()));
+            	product.setImage(productRequest.getImage().getBytes());
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+            
             product.setPrice(productRequest.getPrice());
             product.setStock(productRequest.getStock());
             product.setDescription(productRequest.getDescription());
+            product.setLastModifiedDate(new Date());
             
             productRepository.save(product);
         } else {

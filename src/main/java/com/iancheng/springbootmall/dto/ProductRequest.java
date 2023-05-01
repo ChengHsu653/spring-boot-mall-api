@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class ProductRequest {
 
     @NotNull
@@ -14,7 +16,7 @@ public class ProductRequest {
     private ProductCategory category;
 
     @NotNull
-    private String imageUrl;
+    private MultipartFile image;
 
     @NotNull
     private BigDecimal price;
@@ -40,15 +42,15 @@ public class ProductRequest {
         this.category = category;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
+    public MultipartFile getImage() {
+		return image;
+	}
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
+	public void setImage(MultipartFile image) {
+		this.image = image;
+	}
 
-    public BigDecimal getPrice() {
+	public BigDecimal getPrice() {
         return price;
     }
 
