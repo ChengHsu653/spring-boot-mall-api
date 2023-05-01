@@ -80,7 +80,7 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         
-        configuration.setAllowedOrigins(Arrays.asList(clientUrl, "chrome-extension://aejoelaoggembcahagimdiliamlcdmfm"));
+        configuration.setAllowedOrigins(Arrays.asList("*"));//clientUrl, "chrome-extension://aejoelaoggembcahagimdiliamlcdmfm"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("Authorization"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
