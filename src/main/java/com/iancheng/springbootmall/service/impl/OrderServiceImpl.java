@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import ecpay.payment.integration.AllInOne;
+import ecpay.payment.integration.domain.AioCheckOutALL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +38,6 @@ import com.iancheng.springbootmall.repository.ProductRepository;
 import com.iancheng.springbootmall.repository.UserRepository;
 import com.iancheng.springbootmall.service.OrderService;
 
-import ecpay.payment.integration.AllInOne;
-import ecpay.payment.integration.domain.AioCheckOutALL;
-
 @Service
 public class OrderServiceImpl implements OrderService {
 
@@ -48,7 +47,6 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemRepository orderItemRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
-    private final AllInOne all;
 
     @Value("${application.call-back-url}")
     private String callBackUrl;
@@ -67,7 +65,6 @@ public class OrderServiceImpl implements OrderService {
     	this.orderItemRepository = orderItemRepository;
     	this.productRepository = productRepository;
     	this.userRepository = userRepository;
-        all = new AllInOne("");
     }
     
     
@@ -188,7 +185,7 @@ public class OrderServiceImpl implements OrderService {
 
         Order order = orderRepository.findById(orderId).orElseThrow();
 		order.setUuid(uuId);
-		order = orderRepository.save(order);
+		orderRepository.save(order);
 		
 		// 產生訂單
         return generateCheckOutForm(order, uuId);
@@ -197,7 +194,7 @@ public class OrderServiceImpl implements OrderService {
 	private String generateCheckOutForm(Order order, String uuId) {
 		// 轉換為綠界訂單格
 	    String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
-		String totalAmount = String.valueOf(order.getTotalAmount().intValue());
+        String totalAmount = String.valueOf(order.getTotalAmount().intValue());
 
 		StringBuilder orderDetail = new StringBuilder();
 
@@ -214,7 +211,9 @@ public class OrderServiceImpl implements OrderService {
 		}
 
 		// 產生訂單
+        AllInOne all = new AllInOne("");
 		AioCheckOutALL obj = new AioCheckOutALL();
+
 		obj.setMerchantTradeNo(uuId);
 		obj.setMerchantTradeDate(now);
 		obj.setTotalAmount(totalAmount);
@@ -224,9 +223,8 @@ public class OrderServiceImpl implements OrderService {
 		obj.setNeedExtraPaidInfo("N");
 		obj.setClientBackURL(clientBackUrl);
 
-		return all.aioCheckOut(obj, null);
+        return all.aioCheckOut(obj, null);
 	}
-
 
 	@Override
 	public void callback(MultiValueMap<String, String> formData) {
