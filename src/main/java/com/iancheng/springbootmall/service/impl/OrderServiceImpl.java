@@ -50,11 +50,11 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
     private final AllInOne all;
 
-    @Value("${application.host-url}")
-    private String hostUrl;
+    @Value("${application.call-back-url}")
+    private String callBackUrl;
     
-    @Value("${application.client-url}")
-    private String clientUrl;
+    @Value("${application.client-back-url}")
+    private String clientBackUrl;
 
     @Autowired
     public OrderServiceImpl(
@@ -191,70 +191,41 @@ public class OrderServiceImpl implements OrderService {
 		order = orderRepository.save(order);
 		
 		// 產生訂單
-        // 轉換為綠界訂單格
-        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
-        String totalAmount = String.valueOf(order.getTotalAmount().intValue());
-
-        StringBuilder orderDetail = new StringBuilder();
-
-        List<OrderItem> orderItems = orderItemRepository.findAllByOrder(order);
-
-        // 建立綠界訂單內容
-        for (OrderItem orderItem: orderItems) {
-            Product product = orderItem.getProduct();
-            String productName = product.getProductName();
-            String quantity = String.valueOf(orderItem.getQuantity());
-            String amount = String.valueOf(orderItem.getAmount().intValue());
-
-            orderDetail.append(String.format("[%s * %s = %s]", productName, quantity, amount));
-        }
-
-        // 產生訂單
-        AioCheckOutALL obj = new AioCheckOutALL();
-        obj.setMerchantTradeNo(uuId);
-        obj.setMerchantTradeDate(now);
-        obj.setTotalAmount(totalAmount);
-        obj.setTradeDesc(order.getOrderId().toString());
-        obj.setItemName(orderDetail.toString());
-        obj.setReturnURL(hostUrl + "/api/callback");
-        obj.setNeedExtraPaidInfo("N");
-        obj.setClientBackURL(clientUrl);
-
-        return all.aioCheckOut(obj, null);
+        return generateCheckOutForm(order, uuId);
 	}
 	
-//	private String generateCheckOutForm(AllInOne all, Order order, String uuId) {
-//		// 轉換為綠界訂單格
-//	    String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
-//		String totalAmount = String.valueOf(order.getTotalAmount().intValue());
-//
-//		StringBuilder orderDetail = new StringBuilder();
-//
-//		List<OrderItem> orderItems = orderItemRepository.findAllByOrder(order);
-//
-//		// 建立綠界訂單內容
-//		for (OrderItem orderItem: orderItems) {
-//			Product product = orderItem.getProduct();
-//			String productName = product.getProductName();
-//			String quantity = String.valueOf(orderItem.getQuantity());
-//			String amount = String.valueOf(orderItem.getAmount().intValue());
-//
-//			orderDetail.append(String.format("[%s * %s = %s]", productName, quantity, amount));
-//		}
-//
-//		// 產生訂單
-//		AioCheckOutALL obj = new AioCheckOutALL();
-//		obj.setMerchantTradeNo(uuId);
-//		obj.setMerchantTradeDate(now);
-//		obj.setTotalAmount(totalAmount);
-//		obj.setTradeDesc(order.getOrderId().toString());
-//		obj.setItemName(orderDetail.toString());
-//		obj.setReturnURL(hostUrl + "/api/callback");
-//		obj.setNeedExtraPaidInfo("N");
-//		obj.setClientBackURL(clientUrl);
-//
-//		return all.aioCheckOut(obj, null);
-//	}
+	private String generateCheckOutForm(Order order, String uuId) {
+		// 轉換為綠界訂單格
+	    String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
+		String totalAmount = String.valueOf(order.getTotalAmount().intValue());
+
+		StringBuilder orderDetail = new StringBuilder();
+
+		List<OrderItem> orderItems = orderItemRepository.findAllByOrder(order);
+
+		// 建立綠界訂單內容
+		for (OrderItem orderItem: orderItems) {
+			Product product = orderItem.getProduct();
+			String productName = product.getProductName();
+			String quantity = String.valueOf(orderItem.getQuantity());
+			String amount = String.valueOf(orderItem.getAmount().intValue());
+
+			orderDetail.append(String.format("[%s * %s = %s]", productName, quantity, amount));
+		}
+
+		// 產生訂單
+		AioCheckOutALL obj = new AioCheckOutALL();
+		obj.setMerchantTradeNo(uuId);
+		obj.setMerchantTradeDate(now);
+		obj.setTotalAmount(totalAmount);
+		obj.setTradeDesc(order.getOrderId().toString());
+		obj.setItemName(orderDetail.toString());
+		obj.setReturnURL(callBackUrl);
+		obj.setNeedExtraPaidInfo("N");
+		obj.setClientBackURL(clientBackUrl);
+
+		return all.aioCheckOut(obj, null);
+	}
 
 
 	@Override
