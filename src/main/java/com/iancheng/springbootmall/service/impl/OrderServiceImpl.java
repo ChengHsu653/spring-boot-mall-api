@@ -225,7 +225,7 @@ public class OrderServiceImpl implements OrderService {
 		obj.setItemName(orderDetail.toString());
 		obj.setReturnURL(hostUrl + "/api/callback");
 		obj.setNeedExtraPaidInfo("N");
-		obj.setClientBackURL(clientUrl);
+		obj.setClientBackURL(clientUrl.toString());
 		
 		return all.aioCheckOut(obj, null); 
 	}
