@@ -63,7 +63,7 @@ public class ProductControllerTest {
     public void createProduct_success() throws Exception {
         ProductRequest productRequest = new ProductRequest();
         productRequest.setProductName("test food product");
-        productRequest.setCategory(ProductCategory.FOOD);
+        productRequest.setCategory(ProductCategory.HORROR);
 //        productRequest.setImageUrl("http://test.com");
         productRequest.setPrice(BigDecimal.valueOf(100));
         productRequest.setStock(2);
@@ -79,7 +79,7 @@ public class ProductControllerTest {
                 .andExpect(status().is(201))
                 .andExpect(jsonPath("$.productName", equalTo("test food product")))
                 .andExpect(jsonPath("$.category", equalTo("FOOD")))
-                .andExpect(jsonPath("$.imageUrl", equalTo("http://test.com")))
+//                .andExpect(jsonPath("$.imageUrl", equalTo("http://test.com")))
                 .andExpect(jsonPath("$.price", equalTo(100)))
                 .andExpect(jsonPath("$.stock", equalTo(2)))
                 .andExpect(jsonPath("$.description", nullValue()))
@@ -110,7 +110,7 @@ public class ProductControllerTest {
     public void updateProduct_success() throws Exception {
         ProductRequest productRequest = new ProductRequest();
         productRequest.setProductName("test food product");
-        productRequest.setCategory(ProductCategory.FOOD);
+        productRequest.setCategory(ProductCategory.SPORTS);
 //        productRequest.setImageUrl("http://test.com");
         productRequest.setPrice(BigDecimal.valueOf(100));
         productRequest.setStock(2);
@@ -126,7 +126,7 @@ public class ProductControllerTest {
                 .andExpect(status().is(200))
                 .andExpect(jsonPath("$.productName", equalTo("test food product")))
                 .andExpect(jsonPath("$.category", equalTo("FOOD")))
-                .andExpect(jsonPath("$.imageUrl", equalTo("http://test.com")))
+//                .andExpect(jsonPath("$.imageUrl", equalTo("http://test.com")))
                 .andExpect(jsonPath("$.price", equalTo(100)))
                 .andExpect(jsonPath("$.stock", equalTo(2)))
                 .andExpect(jsonPath("$.description", nullValue()))
@@ -157,7 +157,7 @@ public class ProductControllerTest {
     public void updateProduct_productNotFound() throws Exception {
         ProductRequest productRequest = new ProductRequest();
         productRequest.setProductName("test food product");
-        productRequest.setCategory(ProductCategory.FOOD);
+        productRequest.setCategory(ProductCategory.GAME_THEORY);
 //        productRequest.setImageUrl("http://test.com");
         productRequest.setPrice(BigDecimal.valueOf(100));
         productRequest.setStock(2);

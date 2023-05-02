@@ -31,7 +31,7 @@ public class UserControllerTest {
     @Autowired
     private UserRepository userRepository;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     // 註冊新帳號
     @Test
