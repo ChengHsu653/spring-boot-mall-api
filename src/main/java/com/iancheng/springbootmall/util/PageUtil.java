@@ -2,7 +2,7 @@ package com.iancheng.springbootmall.util;
 
 import java.util.List;
 
-public class PageResponse<T> {
+public class PageUtil<T> {
     private Integer size;
     private Integer page;
     private Integer totalPages;

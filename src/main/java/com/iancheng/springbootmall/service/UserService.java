@@ -20,7 +20,7 @@ public interface UserService {
 
 	User login(UserLoginRequest userLoginRequest);
 
-	User forgetPassword(UserForgetRequest userForgetRequest);
+	void forgetPassword(UserForgetRequest userForgetRequest);
 
 	void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
     

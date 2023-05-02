@@ -44,10 +44,10 @@ public class OrderServiceImpl implements OrderService {
 
     private static final Logger log = LoggerFactory.getLogger(OrderServiceImpl.class);
     
-    private OrderRepository orderRepository;
-    private OrderItemRepository orderItemRepository;
-    private ProductRepository productRepository;
-    private UserRepository userRepository;
+    private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
+    private final ProductRepository productRepository;
+    private final UserRepository userRepository;
 
     @Value("${application.host-url}")
     private String hostUrl;
@@ -84,17 +84,13 @@ public class OrderServiceImpl implements OrderService {
     	);
     	
     	User user = userRepository.findById(orderQueryParams.getUserId()).orElseThrow();
-    	
-    	Page<Order> orders = orderRepository.findAllByUser(user, pageable);
-    	
-        return orders;
+
+        return orderRepository.findAllByUser(user, pageable);
     }
 
     @Override
     public Order getOrderById(Integer orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow();
-        
-        return order;
+        return orderRepository.findById(orderId).orElseThrow();
     }
 
     @Transactional
@@ -107,8 +103,8 @@ public class OrderServiceImpl implements OrderService {
         }
         
         BigDecimal totalAmount = BigDecimal.valueOf(0);
-        List<OrderItem> orderItems = new ArrayList<OrderItem>();
-        
+        List<OrderItem> orderItems = new ArrayList<>();
+
         for (BuyItem buyItem: createOrderRequest.getBuyItems()) {
             Product product = productRepository.getReferenceById(buyItem.getProductId());
 
@@ -159,7 +155,7 @@ public class OrderServiceImpl implements OrderService {
         
         order = orderRepository.save(order);
         
-        orderItems = orderItemRepository.saveAll(orderItems);
+        orderItemRepository.saveAll(orderItems);
         
         return order.getOrderId();
     }
@@ -196,10 +192,8 @@ public class OrderServiceImpl implements OrderService {
 		
 		// 產生訂單
 		AllInOne all = new AllInOne("");
-		
-		String form = generateCheckOutForm(all, order, uuId);
-		
-		return form;
+
+        return generateCheckOutForm(all, order, uuId);
 	}
 	
 	private String generateCheckOutForm(AllInOne all, Order order, String uuId) {

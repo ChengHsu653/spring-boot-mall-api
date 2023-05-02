@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RequestMapping("/api")
 public class ViewController {
 	
-	private UserService userService;
+	private final UserService userService;
 	
 	@Autowired
 	public ViewController(UserService userService) {
@@ -34,7 +34,7 @@ public class ViewController {
 		userVerifyRequest.setEmail(email);
 		userVerifyRequest.setToken(token);
 
-		return userService.verify(userVerifyRequest) == true ? "registerSuccess" : "registerFail";
+		return userService.verify(userVerifyRequest) ? "registerSuccess" : "registerFail";
 	}
 	
 	
@@ -51,6 +51,6 @@ public class ViewController {
 			@RequestParam String password,
 			@RequestParam String confirmPassword
 	) {
-		return userService.resetPassword(email, password, confirmPassword) == true ? "resetSuccess":"resetFail";
+		return userService.resetPassword(email, password, confirmPassword) ? "resetSuccess":"resetFail";
 	}
 }

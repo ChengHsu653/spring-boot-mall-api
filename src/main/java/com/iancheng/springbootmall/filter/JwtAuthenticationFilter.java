@@ -24,12 +24,13 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter{
 
-	private JwtService jwtService;
+	private final JwtService jwtService;
 	
-	private UserDetailsService userDetailsService;
-	
-	private TokenRepository tokenRepository;
-	
+	private final UserDetailsService userDetailsService;
+
+	private final TokenRepository tokenRepository;
+
+
 	@Autowired
 	public JwtAuthenticationFilter(
 			JwtService jwtService, 

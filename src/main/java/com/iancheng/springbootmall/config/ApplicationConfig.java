@@ -18,7 +18,7 @@ import com.iancheng.springbootmall.repository.UserRepository;
 @Configuration
 public class ApplicationConfig {
 
-	private UserRepository userRepository;
+	private final UserRepository userRepository;
 	
 	@Autowired
 	public ApplicationConfig(UserRepository userRepository) {

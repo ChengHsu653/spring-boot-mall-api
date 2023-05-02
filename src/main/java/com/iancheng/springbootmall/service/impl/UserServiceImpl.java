@@ -12,6 +12,7 @@ import com.iancheng.springbootmall.model.Token;
 import com.iancheng.springbootmall.model.User;
 import com.iancheng.springbootmall.repository.TokenRepository;
 import com.iancheng.springbootmall.repository.UserRepository;
+import com.iancheng.springbootmall.service.EmailService;
 import com.iancheng.springbootmall.service.JwtService;
 import com.iancheng.springbootmall.service.UserService;
 
@@ -36,18 +37,20 @@ public class UserServiceImpl implements UserService {
 
 	private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    private UserRepository userRepository;
-    private TokenRepository tokenRepository;
-    private PasswordEncoder passwordEncoder;
-    private JwtService jwtService;
+    private final UserRepository userRepository;
+    private final TokenRepository tokenRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
+    private final JwtService jwtService;
     
     @Autowired
     public UserServiceImpl(UserRepository userRepository, TokenRepository tokenRepository,
-			PasswordEncoder passwordEncoder, JwtService jwtService) {
+			PasswordEncoder passwordEncoder, JwtService jwtService, EmailService emailService) {
 		this.userRepository = userRepository;
 		this.tokenRepository = tokenRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.jwtService = jwtService;
+        this.emailService = emailService;
 	}
 
 
@@ -83,7 +86,10 @@ public class UserServiceImpl implements UserService {
         
         user.setAccessToken(jwtToken);
         user.setRefreshToken(refreshToken);
-        
+
+        // 寄送驗證連結
+        emailService.sendValidationLink(user);
+
         return user;
     }
 
@@ -153,7 +159,7 @@ public class UserServiceImpl implements UserService {
         if (user.getPassword().equals(userVerifyRequest.getToken())) {
         	user.setRole(Role.ROLE_MEMBER);
         	user.setLastModifiedDate(new Date());
-        	user = userRepository.save(user);
+        	userRepository.save(user);
         	
         	return true;
         } else {
@@ -173,7 +179,7 @@ public class UserServiceImpl implements UserService {
         ) {
         	user.setLastModifiedDate(new Date());
         	user.setPassword(passwordEncoder.encode(password));
-        	user = userRepository.save(user);
+        	userRepository.save(user);
         	
         	return true;
         } else {
@@ -184,7 +190,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User forgetPassword(UserForgetRequest userForgetRequest) {
+	public void forgetPassword(UserForgetRequest userForgetRequest) {
 		String email = userForgetRequest.getEmail();
 		
 		// 檢查註冊的 email
@@ -193,8 +199,8 @@ public class UserServiceImpl implements UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         User user = userRepository.getByEmail(email);
-        
-        return user;
+
+        emailService.sendPasswordResetLink(user);
 	}
 
 	@Override
@@ -212,9 +218,9 @@ public class UserServiceImpl implements UserService {
 		userEmail = jwtService.extractUserEmail(refreshToken);
 		
 		if(userEmail != null) {
-			User user = userRepository.findByEmail(userEmail).orElseThrow();
-			
-			if (jwtService.isTokenValid(refreshToken, user)) {
+            User user = userRepository.findByEmail(userEmail).orElseThrow();
+
+            if (jwtService.isTokenValid(refreshToken, user)) {
 				String accessToken = jwtService.generateToken(user);
 				
 				revokeAllUserTokens(user);

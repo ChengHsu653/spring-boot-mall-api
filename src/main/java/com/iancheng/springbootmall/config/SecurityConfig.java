@@ -1,10 +1,8 @@
 package com.iancheng.springbootmall.config;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -28,12 +26,10 @@ import com.iancheng.springbootmall.filter.JwtAuthenticationFilter;
 @EnableWebSecurity
 public class SecurityConfig {
 	
-	private JwtAuthenticationFilter jwtAuthFilter;
-	private AuthenticationProvider authenticationProvider;
-	private LogoutHandler logoutHandler;
-	
-	@Value("${application.client-url}") 
-	private String clientUrl;
+	private final JwtAuthenticationFilter jwtAuthFilter;
+	private final AuthenticationProvider authenticationProvider;
+	private final LogoutHandler logoutHandler;
+
 	
 	@Autowired
 	public SecurityConfig(
@@ -80,9 +76,9 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         
-        configuration.setAllowedOrigins(Arrays.asList("*"));//clientUrl));
+        configuration.setAllowedOrigins(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         

@@ -15,7 +15,6 @@ import com.iancheng.springbootmall.dto.UserForgetRequest;
 import com.iancheng.springbootmall.dto.UserLoginRequest;
 import com.iancheng.springbootmall.dto.UserRegisterRequest;
 import com.iancheng.springbootmall.model.User;
-import com.iancheng.springbootmall.service.EmailService;
 import com.iancheng.springbootmall.service.UserService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,13 +26,11 @@ import jakarta.validation.Valid;
 @RequestMapping("/api")
 public class UserController {
 
-	private UserService userService;
-	private EmailService emailService;
-	
+	private final UserService userService;
+
 	@Autowired
-	public UserController(UserService userService, EmailService emailService) {
+	public UserController(UserService userService) {
 		this.userService = userService;
-		this.emailService = emailService;
 	}
 
 	
@@ -43,8 +40,6 @@ public class UserController {
 			@RequestBody @Valid UserRegisterRequest userRegisterRequest
 	) {
 		User user = userService.register(userRegisterRequest);
-
-		emailService.sendValidationLink(user);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(user);
 	}
@@ -70,9 +65,7 @@ public class UserController {
 	public ResponseEntity<?> forgetPassword(
 			@RequestBody UserForgetRequest userForgetRequest
 	) {
-		User user = userService.forgetPassword(userForgetRequest);
-
-		emailService.sendPasswordResetLink(user);
+		userService.forgetPassword(userForgetRequest);
 
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}

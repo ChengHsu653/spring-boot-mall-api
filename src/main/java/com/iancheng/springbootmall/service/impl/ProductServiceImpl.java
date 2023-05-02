@@ -21,14 +21,13 @@ import com.iancheng.springbootmall.dto.ProductRequest;
 import com.iancheng.springbootmall.model.Product;
 import com.iancheng.springbootmall.repository.ProductRepository;
 import com.iancheng.springbootmall.service.ProductService;
-import com.iancheng.springbootmall.util.ImageUtil;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
 	private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
 	 
-	private ProductRepository productRepository;
+	private final ProductRepository productRepository;
 
 	@Autowired
     public ProductServiceImpl(ProductRepository productRepository) {
@@ -63,10 +62,7 @@ public class ProductServiceImpl implements ProductService {
     	Optional<Product> optionalProduct = productRepository.findById(productId);
         
     	if (optionalProduct.isPresent()) {
-            Product product = optionalProduct.get();
-//            product.setImage(ImageUtil.decompressImage(product.getImage()));
-            
-            return product;
+            return optionalProduct.get();
         } else {
         	log.warn("該商品 id: {} 不存在", productId);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
@@ -81,7 +77,6 @@ public class ProductServiceImpl implements ProductService {
     	product.setCategory(productRequest.getCategory());
     	
     	try {
-//			product.setImage(ImageUtil.compressImage(productRequest.getImage().getBytes()));
 			product.setImage(productRequest.getImage().getBytes());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -112,7 +107,6 @@ public class ProductServiceImpl implements ProductService {
             product.setCategory(productRequest.getCategory());
             
             try {
-//    			product.setImage(ImageUtil.compressImage(productRequest.getImage().getBytes()));
             	product.setImage(productRequest.getImage().getBytes());
     		} catch (IOException e) {
     			e.printStackTrace();
@@ -138,8 +132,6 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public ProductCategory[] getProductCategories() {
-		ProductCategory[] categories = ProductCategory.values();
-		
-		return categories;
+		return ProductCategory.values();
 	}
 }

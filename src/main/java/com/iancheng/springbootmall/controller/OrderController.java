@@ -4,7 +4,7 @@ import com.iancheng.springbootmall.dto.CreateOrderRequest;
 import com.iancheng.springbootmall.dto.OrderQueryParams;
 import com.iancheng.springbootmall.model.Order;
 import com.iancheng.springbootmall.service.OrderService;
-import com.iancheng.springbootmall.util.PageResponse;
+import com.iancheng.springbootmall.util.PageUtil;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class OrderController {
 
-	private OrderService orderService;
+	private final OrderService orderService;
 
 	@Autowired
     public OrderController(OrderService orderService) {
@@ -34,7 +34,7 @@ public class OrderController {
 
     @Tag(name = "getOrders")
     @GetMapping("/users/{userId}/orders")
-    public ResponseEntity<PageResponse<Order>> getOrders(
+    public ResponseEntity<PageUtil<Order>> getOrders(
             @PathVariable Integer userId,
             @RequestParam(defaultValue = "5") @Max(1000) @Min(0) Integer size,
             @RequestParam(defaultValue = "0") @Min(0) Integer page
@@ -42,20 +42,20 @@ public class OrderController {
         OrderQueryParams orderQueryParams = new OrderQueryParams();
         orderQueryParams.setUserId(userId);
         orderQueryParams.setSize(size);
-        orderQueryParams.setPage(page - 1 < 0 ? 0 : page - 1);
+        orderQueryParams.setPage(Math.max(page - 1, 0));
 
         // 取得 order list 分頁
         Page<Order> orderListPage = orderService.getOrders(orderQueryParams);
 
         // 整理分頁
-        PageResponse<Order> pageResponse = new PageResponse<>();
-        pageResponse.setResults(orderListPage.getContent());
-        pageResponse.setSize(orderListPage.getSize());
-        pageResponse.setPage(orderListPage.getPageable().getPageNumber());
-        pageResponse.setTotal(orderListPage.getTotalElements());
-        pageResponse.setTotalPages(orderListPage.getTotalPages());
+        PageUtil<Order> pageUtil = new PageUtil<>();
+        pageUtil.setResults(orderListPage.getContent());
+        pageUtil.setSize(orderListPage.getSize());
+        pageUtil.setPage(orderListPage.getPageable().getPageNumber());
+        pageUtil.setTotal(orderListPage.getTotalElements());
+        pageUtil.setTotalPages(orderListPage.getTotalPages());
         
-        return ResponseEntity.status(HttpStatus.OK).body(pageResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(pageUtil);
     }
 
     @Tag(name = "createOrder")

@@ -22,7 +22,7 @@ public class EmailServiceImpl implements EmailService{
 	
 	private static final Logger log = LoggerFactory.getLogger(EmailServiceImpl.class);
 
-	private JavaMailSender javaMailSender;
+	private final JavaMailSender javaMailSender;
 	
 	@Autowired
 	public EmailServiceImpl(JavaMailSender javaMailSender) {

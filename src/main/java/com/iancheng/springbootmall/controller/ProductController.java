@@ -20,7 +20,7 @@ import com.iancheng.springbootmall.dto.ProductQueryParams;
 import com.iancheng.springbootmall.dto.ProductRequest;
 import com.iancheng.springbootmall.model.Product;
 import com.iancheng.springbootmall.service.ProductService;
-import com.iancheng.springbootmall.util.PageResponse;
+import com.iancheng.springbootmall.util.PageUtil;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -33,7 +33,7 @@ import jakarta.validation.constraints.Min;
 @RequestMapping("/api")
 public class ProductController {
 
-    private ProductService productService;
+    private final ProductService productService;
     
     @Autowired
     public ProductController(ProductService productService) {
@@ -43,7 +43,7 @@ public class ProductController {
 
 	@Tag(name = "getProducts")
     @GetMapping("/products")
-    public ResponseEntity<PageResponse<Product>> getProducts(
+    public ResponseEntity<PageUtil<Product>> getProducts(
             // 查詢條件 Filtering
             @RequestParam(required = false) ProductCategory category,
             @RequestParam(required = false) String search,
@@ -62,19 +62,19 @@ public class ProductController {
         productQueryParams.setOrderBy(orderBy);
         productQueryParams.setSort(sort);
         productQueryParams.setSize(size);
-        productQueryParams.setPage(page - 1 < 0 ? 0 : page - 1);
+        productQueryParams.setPage(Math.max(page - 1, 0));
 
         // 取得 product list 分頁
         Page<Product> productListPage = productService.getProducts(productQueryParams);
 
         // 整理分頁
-        PageResponse<Product> pageResponse = new PageResponse<>();
-        pageResponse.setResults(productListPage.getContent());
-        pageResponse.setSize(productListPage.getSize());
-        pageResponse.setPage(productListPage.getPageable().getPageNumber());
-        pageResponse.setTotal(productListPage.getTotalElements());
-        pageResponse.setTotalPages(productListPage.getTotalPages());
-        return ResponseEntity.status(HttpStatus.OK).body(pageResponse);
+        PageUtil<Product> pageUtil = new PageUtil<>();
+        pageUtil.setResults(productListPage.getContent());
+        pageUtil.setSize(productListPage.getSize());
+        pageUtil.setPage(productListPage.getPageable().getPageNumber());
+        pageUtil.setTotal(productListPage.getTotalElements());
+        pageUtil.setTotalPages(productListPage.getTotalPages());
+        return ResponseEntity.status(HttpStatus.OK).body(pageUtil);
     }
 
     @Tag(name = "getProduct")
