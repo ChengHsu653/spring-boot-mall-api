@@ -5,6 +5,7 @@ import java.util.Date;
 
 import com.iancheng.springbootmall.constant.ProductCategory;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,6 +38,7 @@ public class Product {
     @Lob @Basic(fetch=FetchType.LAZY)
 	@Column(name="image",
 			columnDefinition="LONGBLOB")
+	@Nullable
 	private byte[] image;
 
     @Column(name = "price")
