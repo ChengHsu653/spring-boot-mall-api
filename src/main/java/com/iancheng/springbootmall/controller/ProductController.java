@@ -91,7 +91,7 @@ public class ProductController {
     @Tag(name = "createProduct")
     @PostMapping("/products")
     public ResponseEntity<Product> createProduct(
-    		@ModelAttribute @Valid ProductRequest productRequest
+    		@ModelAttribute ProductRequest productRequest
     ) {
     	Product product = productService.createProduct(productRequest);
 
@@ -102,7 +102,7 @@ public class ProductController {
     @PutMapping("/products/{productId}")
     public ResponseEntity<Product> updateProduct(
     		@PathVariable Integer productId,
-            @ModelAttribute @Valid ProductRequest productRequest
+            @ModelAttribute ProductRequest productRequest
     ) {
         // 檢查 product 是否存在	
         Product product = productService.getProductById(productId);

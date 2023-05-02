@@ -38,7 +38,6 @@ public class Product {
     @Lob @Basic(fetch=FetchType.LAZY)
 	@Column(name="image",
 			columnDefinition="LONGBLOB")
-	@Nullable
 	private byte[] image;
 
     @Column(name = "price")
