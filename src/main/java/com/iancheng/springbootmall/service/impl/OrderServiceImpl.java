@@ -48,6 +48,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemRepository orderItemRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final AllInOne all;
 
     @Value("${application.host-url}")
     private String hostUrl;
@@ -66,6 +67,7 @@ public class OrderServiceImpl implements OrderService {
     	this.orderItemRepository = orderItemRepository;
     	this.productRepository = productRepository;
     	this.userRepository = userRepository;
+        all = new AllInOne("");
     }
     
     
@@ -185,50 +187,74 @@ public class OrderServiceImpl implements OrderService {
         String uuId = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 20);
 
         Order order = orderRepository.findById(orderId).orElseThrow();
-
 		order.setUuid(uuId);
-		
 		order = orderRepository.save(order);
 		
 		// 產生訂單
-		AllInOne all = new AllInOne("");
+        // 轉換為綠界訂單格
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
+        String totalAmount = String.valueOf(order.getTotalAmount().intValue());
 
-        return generateCheckOutForm(all, order, uuId);
+        StringBuilder orderDetail = new StringBuilder();
+
+        List<OrderItem> orderItems = orderItemRepository.findAllByOrder(order);
+
+        // 建立綠界訂單內容
+        for (OrderItem orderItem: orderItems) {
+            Product product = orderItem.getProduct();
+            String productName = product.getProductName();
+            String quantity = String.valueOf(orderItem.getQuantity());
+            String amount = String.valueOf(orderItem.getAmount().intValue());
+
+            orderDetail.append(String.format("[%s * %s = %s]", productName, quantity, amount));
+        }
+
+        // 產生訂單
+        AioCheckOutALL obj = new AioCheckOutALL();
+        obj.setMerchantTradeNo(uuId);
+        obj.setMerchantTradeDate(now);
+        obj.setTotalAmount(totalAmount);
+        obj.setTradeDesc(order.getOrderId().toString());
+        obj.setItemName(orderDetail.toString());
+        obj.setReturnURL(hostUrl + "/api/callback");
+        obj.setNeedExtraPaidInfo("N");
+        obj.setClientBackURL(clientUrl);
+
+        return all.aioCheckOut(obj, null);
 	}
 	
-	private String generateCheckOutForm(AllInOne all, Order order, String uuId) {
-		// 轉換為綠界訂單格式
-		
-	    String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
-		String totalAmount = String.valueOf(order.getTotalAmount().intValue());
-		
-		StringBuilder orderDetail = new StringBuilder();
-		
-		List<OrderItem> orderItems = orderItemRepository.findAllByOrder(order);
-
-		// 建立綠界訂單內容
-		for (OrderItem orderItem: orderItems) {
-			Product product = orderItem.getProduct();
-			String productName = product.getProductName();
-			String quantity = String.valueOf(orderItem.getQuantity());
-			String amount = String.valueOf(orderItem.getAmount().intValue());
-			
-			orderDetail.append(String.format("[%s * %s = %s]", productName, quantity, amount));
-		}
-    	
-		// 產生訂單
-		AioCheckOutALL obj = new AioCheckOutALL();
-		obj.setMerchantTradeNo(uuId);
-		obj.setMerchantTradeDate(now);
-		obj.setTotalAmount(totalAmount);		
-		obj.setTradeDesc(order.getOrderId().toString());
-		obj.setItemName(orderDetail.toString());
-		obj.setReturnURL(hostUrl + "/api/callback");
-		obj.setNeedExtraPaidInfo("N");
-		obj.setClientBackURL(clientUrl.toString());
-		
-		return all.aioCheckOut(obj, null); 
-	}
+//	private String generateCheckOutForm(AllInOne all, Order order, String uuId) {
+//		// 轉換為綠界訂單格
+//	    String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
+//		String totalAmount = String.valueOf(order.getTotalAmount().intValue());
+//
+//		StringBuilder orderDetail = new StringBuilder();
+//
+//		List<OrderItem> orderItems = orderItemRepository.findAllByOrder(order);
+//
+//		// 建立綠界訂單內容
+//		for (OrderItem orderItem: orderItems) {
+//			Product product = orderItem.getProduct();
+//			String productName = product.getProductName();
+//			String quantity = String.valueOf(orderItem.getQuantity());
+//			String amount = String.valueOf(orderItem.getAmount().intValue());
+//
+//			orderDetail.append(String.format("[%s * %s = %s]", productName, quantity, amount));
+//		}
+//
+//		// 產生訂單
+//		AioCheckOutALL obj = new AioCheckOutALL();
+//		obj.setMerchantTradeNo(uuId);
+//		obj.setMerchantTradeDate(now);
+//		obj.setTotalAmount(totalAmount);
+//		obj.setTradeDesc(order.getOrderId().toString());
+//		obj.setItemName(orderDetail.toString());
+//		obj.setReturnURL(hostUrl + "/api/callback");
+//		obj.setNeedExtraPaidInfo("N");
+//		obj.setClientBackURL(clientUrl);
+//
+//		return all.aioCheckOut(obj, null);
+//	}
 
 
 	@Override
