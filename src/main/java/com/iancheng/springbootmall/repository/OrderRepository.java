@@ -12,7 +12,7 @@ import com.iancheng.springbootmall.model.User;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer>{
 
-	Page<Order> findAllByUser(User user, Pageable pageable);
+	Page<Order> findAllByUserOrderByCreatedDateDesc(User user, Pageable pageable);
 	
 	boolean existsByUser(User user);
 	

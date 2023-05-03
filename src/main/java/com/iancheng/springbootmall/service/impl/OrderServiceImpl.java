@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,13 +77,12 @@ public class OrderServiceImpl implements OrderService {
         
     	Pageable pageable = PageRequest.of(
     			orderQueryParams.getPage(),
-    			orderQueryParams.getSize(),
-    			Sort.by("createdDate")
+    			orderQueryParams.getSize()
     	);
     	
     	User user = userRepository.findById(orderQueryParams.getUserId()).orElseThrow();
 
-        return orderRepository.findAllByUser(user, pageable);
+        return orderRepository.findAllByUserOrderByCreatedDateDesc(user, pageable);
     }
 
     @Override

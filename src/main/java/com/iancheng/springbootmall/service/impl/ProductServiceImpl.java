@@ -62,7 +62,10 @@ public class ProductServiceImpl implements ProductService {
     	Optional<Product> optionalProduct = productRepository.findById(productId);
         
     	if (optionalProduct.isPresent()) {
-            return optionalProduct.get();
+			Product product = optionalProduct.get();
+			product.setImage(product.getImage());
+
+            return product;
         } else {
         	log.warn("該商品 id: {} 不存在", productId);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
@@ -92,7 +95,7 @@ public class ProductServiceImpl implements ProductService {
     	product.setLastModifiedDate(now);
     	
     	product = productRepository.save(product);
-        
+
     	return product;
     }
 
@@ -108,7 +111,7 @@ public class ProductServiceImpl implements ProductService {
             
             try {
             	product.setImage(productRequest.getImage().getBytes());
-    		} catch (IOException e) {
+			} catch (IOException e) {
     			e.printStackTrace();
     		}
             
