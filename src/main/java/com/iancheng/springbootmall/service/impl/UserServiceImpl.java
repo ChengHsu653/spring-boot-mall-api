@@ -128,11 +128,13 @@ public class UserServiceImpl implements UserService {
 
             revokeAllUserTokens(user);
             saveUserToken(user, jwtToken);
-        	
+
+            user.setLastModifiedDate(new Date());
+            userRepository.save(user);
+
             user.setAccessToken(jwtToken);
             user.setRefreshToken(refreshToken);
-            user.setLastModifiedDate(new Date());
-            
+
             return user;
         } else {
             log.warn("Email {} 的密碼不正確", userLoginRequest.getEmail());
