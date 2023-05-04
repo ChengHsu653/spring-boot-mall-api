@@ -4,10 +4,7 @@ package com.iancheng.springbootmall.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iancheng.springbootmall.constant.Role;
 import com.iancheng.springbootmall.constant.TokenType;
-import com.iancheng.springbootmall.dto.UserForgetRequest;
-import com.iancheng.springbootmall.dto.UserLoginRequest;
-import com.iancheng.springbootmall.dto.UserRegisterRequest;
-import com.iancheng.springbootmall.dto.UserVerifyRequest;
+import com.iancheng.springbootmall.dto.*;
 import com.iancheng.springbootmall.model.Token;
 import com.iancheng.springbootmall.model.User;
 import com.iancheng.springbootmall.repository.TokenRepository;
@@ -26,6 +23,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -236,6 +237,17 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 	}
-	
-	
+
+    @Override
+    public Page<User> getUsers(UserQueryParams userQueryParams) {
+        Pageable pageable = PageRequest.of(
+                userQueryParams.getPage(),
+                userQueryParams.getSize(),
+                Sort.by(Sort.Direction.DESC, "createdDate")
+        );
+
+        return userRepository.findAll(pageable);
+    }
+
+
 }
