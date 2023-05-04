@@ -91,4 +91,28 @@ public class OrderController {
 	) {
     	orderService.callback(formData);
 	}
+
+    @Tag(name = "getAllOrders")
+    @GetMapping("/users/all/orders")
+    public ResponseEntity<PageUtil<Order>> getAllOrders(
+            @RequestParam(defaultValue = "5") @Max(1000) @Min(0) Integer size,
+            @RequestParam(defaultValue = "0") @Min(0) Integer page
+    ) {
+        OrderQueryParams orderQueryParams = new OrderQueryParams();
+        orderQueryParams.setSize(size);
+        orderQueryParams.setPage(Math.max(page - 1, 0));
+
+        // 取得 order list 分頁
+        Page<Order> orderListPage = orderService.getAllOrders(orderQueryParams);
+
+        // 整理分頁
+        PageUtil<Order> pageUtil = new PageUtil<>();
+        pageUtil.setResults(orderListPage.getContent());
+        pageUtil.setSize(orderListPage.getSize());
+        pageUtil.setPage(orderListPage.getPageable().getPageNumber());
+        pageUtil.setTotal(orderListPage.getTotalElements());
+        pageUtil.setTotalPages(orderListPage.getTotalPages());
+
+        return ResponseEntity.status(HttpStatus.OK).body(pageUtil);
+    }
 }

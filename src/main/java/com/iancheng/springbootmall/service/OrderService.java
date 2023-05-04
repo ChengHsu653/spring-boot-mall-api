@@ -19,4 +19,6 @@ public interface OrderService {
 	String checkout(Integer userId, Integer orderId);
 
 	void callback(MultiValueMap<String, String> formData);
+
+    Page<Order> getAllOrders(OrderQueryParams orderQueryParams);
 }
