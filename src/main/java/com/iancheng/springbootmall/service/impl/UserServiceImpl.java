@@ -131,6 +131,7 @@ public class UserServiceImpl implements UserService {
         	
             user.setAccessToken(jwtToken);
             user.setRefreshToken(refreshToken);
+            user.setLastModifiedDate(new Date());
             
             return user;
         } else {
