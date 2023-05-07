@@ -64,7 +64,7 @@ public class Oauth2Controller {
         cookie.setPath("/");
         servletResponse.addCookie(cookie);
         servletResponse.sendRedirect(CLIENT_URL +
-                "?token=" + user.getAccessToken() + "&userId=" + user.getUserId());
+                "/products?token=" + user.getAccessToken() + "&userId=" + user.getUserId());
 
     }
 }
