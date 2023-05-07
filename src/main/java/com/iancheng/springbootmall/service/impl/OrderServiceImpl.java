@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -239,8 +240,19 @@ public class OrderServiceImpl implements OrderService {
 		
 		orderRepository.save(order);
 	}
-	
-	private boolean userExists(Integer userId) {
+
+    @Override
+    public Page<Order> getAllOrders(OrderQueryParams orderQueryParams) {
+        Pageable pageable = PageRequest.of(
+                orderQueryParams.getPage(),
+                orderQueryParams.getSize(),
+                Sort.by(Sort.Direction.DESC, "createdDate")
+        );
+
+        return orderRepository.findAll(pageable);
+    }
+
+    private boolean userExists(Integer userId) {
 		return userRepository.existsById(userId);
 	}
 	
