@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class Oauth2Controller {
 
-    @Value("${application.client-back-url}")
-    private String clientBackUrl;
+    @Value("${application.client-url}")
+    private String CLIENT_URL;
 
     private final UserService userService;
     private final OAuth20Service googleOAuth20Service;
@@ -63,7 +63,7 @@ public class Oauth2Controller {
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         servletResponse.addCookie(cookie);
-        servletResponse.sendRedirect(clientBackUrl +
+        servletResponse.sendRedirect(CLIENT_URL +
                 "?token=" + user.getAccessToken() + "&userId=" + user.getUserId());
 
     }
