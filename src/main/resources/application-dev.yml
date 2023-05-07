@@ -26,11 +26,16 @@ spring:
           starttls:
             enable: 'true'
           auth: 'true'
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 890240672665-0ekocfscjdvchcne1ttnmiloit77v1ra.apps.googleusercontent.com
+            client-secret:
 application:
   host-url: https://d934-27-53-248-234.ngrok-free.app
   client-url: http://127.0.0.1:5500
-  call-back-url: http://127.0.0.1:8080/api/callback
-  client-back-url: http://127.0.0.1:5500/order.html
   security:
     jwt:
       secret-key: 5468576D5A7134743677397A24432646294A404E635266556A586E3272357538

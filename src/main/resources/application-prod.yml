@@ -21,11 +21,16 @@ spring:
           starttls:
             enable: 'true'
           auth: 'true'
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${PROD_OAUTH2_CLIENT_ID}
+            client-secret: ${PROD_OAUTH2_CLIENT_SECRET}
 application:
   host-url: ${PROD_HOST_URL}
   client-url: ${PROD_CLIENT_URL}
-  call-back-url: ${PROD_CALL_BACK_URL}
-  client-back-url: ${PROD_CLIENT_BACK_URL}
   security:
     jwt:
       secret-key: ${PROD_JWT_SECRET_KEY}

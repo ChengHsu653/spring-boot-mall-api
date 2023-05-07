@@ -1,6 +1,10 @@
 package com.iancheng.springbootmall.config;
 
+import com.github.scribejava.apis.GoogleApi20;
+import com.github.scribejava.core.builder.ServiceBuilder;
+import com.github.scribejava.core.oauth.OAuth20Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +21,15 @@ import com.iancheng.springbootmall.repository.UserRepository;
 
 @Configuration
 public class ApplicationConfig {
+
+	@Value("${spring.security.oauth2.client.registration.google.client-id}")
+	private String CLIENT_ID;
+	@Value("${spring.security.oauth2.client.registration.google.client-secret}")
+	private String CLIENT_SECRET;
+
+	@Value("${application.host-url}")
+	private String HOST_URL;
+
 
 	private final UserRepository userRepository;
 	
@@ -50,5 +63,13 @@ public class ApplicationConfig {
 		return new BCryptPasswordEncoder();
 	}
 
-	
+	@Bean
+	public OAuth20Service googleOAuth20Service() {
+		return new ServiceBuilder(CLIENT_ID)
+				.apiSecret(CLIENT_SECRET)
+				.callback(HOST_URL + "/google/callback")
+				.defaultScope("https://www.googleapis.com/auth/userinfo.profile " +
+						"https://www.googleapis.com/auth/userinfo.email")
+				.build(GoogleApi20.instance());
+	}
 }

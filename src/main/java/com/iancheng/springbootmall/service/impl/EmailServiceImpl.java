@@ -30,17 +30,17 @@ public class EmailServiceImpl implements EmailService{
 	}
 
 	@Value("${spring.mail.username}") 
-	private String sender;
+	private String SENDER;
 	
 	@Value("${application.host-url}") 
-	private String hostUrl;
+	private String HOST_URL;
 	
 	
 	@Override
 	public void sendValidationLink(User user) {
 		try {
             var link = String.format(
-            		hostUrl + "/api/users/verify?email=%s&token=%s",
+					HOST_URL + "/api/users/verify?email=%s&token=%s",
             		user.getEmail(),
             		user.getPassword());
             
@@ -56,7 +56,7 @@ public class EmailServiceImpl implements EmailService{
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
             
-            helper.setFrom(sender);
+            helper.setFrom(SENDER);
             helper.setTo(user.getEmail());
             helper.setText(html, true);
             helper.setSubject("Spring Boot Mall 驗證郵件(請勿回傳)");
@@ -73,7 +73,7 @@ public class EmailServiceImpl implements EmailService{
 	@Override
 	public void sendPasswordResetLink(User user) {
 		try {
-            var link = hostUrl + "/api/users/reset_form";
+            var link = HOST_URL + "/api/users/reset_form";
             
             var anchor = String.format(
             		"<a href='%s'>重設密碼</a>",
@@ -87,7 +87,7 @@ public class EmailServiceImpl implements EmailService{
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
             
-            helper.setFrom(sender);
+            helper.setFrom(SENDER);
             helper.setTo(user.getEmail());
             helper.setText(html, true);
             helper.setSubject("Spring Boot Mall 重設密碼(請勿回傳)");

@@ -22,13 +22,13 @@ import io.jsonwebtoken.security.Keys;
 public class JwtServiceImpl implements JwtService{
 
 	@Value("${application.security.jwt.secret-key}")
-	private String secretKey; 
+	private String SECRET_KEY;
 	
 	@Value("${application.security.jwt.expiration}")
-	private long jwtExpiration;
+	private long JWT_EXPIRATION;
 	
 	@Value("${application.security.jwt.refresh-token.expiration}")
-	private long refreshExpiration;
+	private long REFRESH_EXPIRATION;
 	
 	
 	@Override
@@ -53,12 +53,12 @@ public class JwtServiceImpl implements JwtService{
 			Map<String, Object> extraClaims,
 			UserDetails userDetails
 	) {
-		return buildToken(extraClaims, userDetails, jwtExpiration);
+		return buildToken(extraClaims, userDetails, JWT_EXPIRATION);
 	}
 	
 	@Override
 	public String generateRefreshToken(UserDetails userDetails) {
-		return buildToken(new HashMap<>(), userDetails, refreshExpiration);
+		return buildToken(new HashMap<>(), userDetails, REFRESH_EXPIRATION);
 	}
 	
 	private String buildToken(
@@ -101,7 +101,7 @@ public class JwtServiceImpl implements JwtService{
 	}
 
 	private Key getSignInKey() {
-		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+		byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
 		
 		return Keys.hmacShaKeyFor(keyBytes);
 	}

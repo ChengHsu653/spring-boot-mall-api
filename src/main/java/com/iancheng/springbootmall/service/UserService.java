@@ -2,10 +2,7 @@ package com.iancheng.springbootmall.service;
 
 import java.io.IOException;
 
-import com.iancheng.springbootmall.dto.UserForgetRequest;
-import com.iancheng.springbootmall.dto.UserLoginRequest;
-import com.iancheng.springbootmall.dto.UserRegisterRequest;
-import com.iancheng.springbootmall.dto.UserVerifyRequest;
+import com.iancheng.springbootmall.dto.*;
 import com.iancheng.springbootmall.model.User;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,5 +20,6 @@ public interface UserService {
 	void forgetPassword(UserForgetRequest userForgetRequest);
 
 	void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
-    
+
+    User oauth20Login(OAuth20LoginParams oAuth20LoginParams);
 }

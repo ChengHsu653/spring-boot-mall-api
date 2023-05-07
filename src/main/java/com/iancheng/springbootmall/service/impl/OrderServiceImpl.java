@@ -47,11 +47,11 @@ public class OrderServiceImpl implements OrderService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
 
-    @Value("${application.call-back-url}")
-    private String callBackUrl;
-    
-    @Value("${application.client-back-url}")
-    private String clientBackUrl;
+    @Value("${application.host-url}")
+    private String HOST_URL;
+
+    @Value("${application.client-url}")
+    private String CLIENT_URL;
 
     @Autowired
     public OrderServiceImpl(
@@ -217,9 +217,9 @@ public class OrderServiceImpl implements OrderService {
 		obj.setTotalAmount(totalAmount);
 		obj.setTradeDesc(order.getOrderId().toString());
 		obj.setItemName(orderDetail.toString());
-		obj.setReturnURL(callBackUrl);
+		obj.setReturnURL(HOST_URL + "/api/callback");
 		obj.setNeedExtraPaidInfo("N");
-		obj.setClientBackURL(clientBackUrl);
+		obj.setClientBackURL(CLIENT_URL + "/order");
 
         return all.aioCheckOut(obj, null);
 	}

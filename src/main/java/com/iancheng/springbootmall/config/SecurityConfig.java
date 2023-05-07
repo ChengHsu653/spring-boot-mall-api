@@ -1,7 +1,6 @@
 package com.iancheng.springbootmall.config;
 
-import java.util.Arrays;
-
+import com.iancheng.springbootmall.filter.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +18,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.iancheng.springbootmall.filter.JwtAuthenticationFilter;
+import java.util.Arrays;
 
 
 @Configuration
@@ -46,20 +45,19 @@ public class SecurityConfig {
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
+		.csrf().disable()
         .authorizeHttpRequests()
-        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-        .requestMatchers("/api/users/*/orders").hasAnyRole("MEMBER", "ADMIN")
-        .requestMatchers("/api/users/*").permitAll()
-        .requestMatchers("/api/callback").permitAll()
-        .requestMatchers(HttpMethod.GET, "/api/products", "/api/products/*").permitAll()
-        .requestMatchers(HttpMethod.POST, "/api/products").hasRole("ADMIN")
-        .requestMatchers(HttpMethod.PUT, "/api/products/*").hasRole("ADMIN")
-        .requestMatchers(HttpMethod.DELETE, "/api/products/*").hasRole("ADMIN")
-        .anyRequest().authenticated()
-        .and()
+			.requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/redirectToGoogle", "/google/callback/**", "/api/callback").permitAll()
+			.requestMatchers("/api/users/*/orders").hasAnyRole("MEMBER", "ADMIN")
+			.requestMatchers("/api/users/**").permitAll()
+			.requestMatchers(HttpMethod.GET, "/api/products", "/api/products/*").permitAll()
+			.requestMatchers(HttpMethod.POST, "/api/products").hasRole("ADMIN")
+			.requestMatchers(HttpMethod.PUT, "/api/products/*").hasRole("ADMIN")
+			.requestMatchers(HttpMethod.DELETE, "/api/products/*").hasRole("ADMIN")
+			.anyRequest().authenticated()
+		.and()
         .cors(Customizer.withDefaults())
-        .csrf().disable()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
         .and()
         .authenticationProvider(authenticationProvider)
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
@@ -71,7 +69,7 @@ public class SecurityConfig {
 		
 	    return http.build();
 	}
-	
+
 	@Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

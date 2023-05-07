@@ -4,10 +4,7 @@ package com.iancheng.springbootmall.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iancheng.springbootmall.constant.Role;
 import com.iancheng.springbootmall.constant.TokenType;
-import com.iancheng.springbootmall.dto.UserForgetRequest;
-import com.iancheng.springbootmall.dto.UserLoginRequest;
-import com.iancheng.springbootmall.dto.UserRegisterRequest;
-import com.iancheng.springbootmall.dto.UserVerifyRequest;
+import com.iancheng.springbootmall.dto.*;
 import com.iancheng.springbootmall.model.Token;
 import com.iancheng.springbootmall.model.User;
 import com.iancheng.springbootmall.repository.TokenRepository;
@@ -236,6 +233,42 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 	}
-	
-	
+
+    @Override
+    public User oauth20Login(OAuth20LoginParams oAuth20LoginParams) {
+        User user = null;
+        // 檢查註冊的 email
+        if (!emailExists(oAuth20LoginParams.getEmail())) {
+            // 創建帳號
+            user = new User();
+
+            user.setEmail(oAuth20LoginParams.getEmail());
+            user.setUserName(oAuth20LoginParams.getName());
+            user.setRole(Role.ROLE_MEMBER);
+
+            Date now = new Date();
+
+            user.setCreatedDate(now);
+            user.setLastModifiedDate(now);
+
+            userRepository.save(user);
+        } else {
+            user = userRepository.getByEmail(oAuth20LoginParams.getEmail());
+            user.setLastModifiedDate(new Date());
+            userRepository.save(user);
+        }
+
+        // 產生 JWT
+        String jwtToken = jwtService.generateToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+
+        saveUserToken(user, jwtToken);
+
+        user.setAccessToken(jwtToken);
+        user.setRefreshToken(refreshToken);
+
+        return user;
+    }
+
+
 }
