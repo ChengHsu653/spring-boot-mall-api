@@ -120,6 +120,8 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = userRepository.getByEmail(userLoginRequest.getEmail());
+        user.setLastModifiedDate(new Date());
+        userRepository.save(user);
         
         // 比較密碼
         if (passwordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
