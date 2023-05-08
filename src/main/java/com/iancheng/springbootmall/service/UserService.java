@@ -7,6 +7,7 @@ import com.iancheng.springbootmall.model.User;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.data.domain.Page;
 
 public interface UserService {
 	boolean verify(UserVerifyRequest userVerifyRequest);
@@ -22,4 +23,6 @@ public interface UserService {
 	void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
     User oauth20Login(OAuth20LoginParams oAuth20LoginParams);
+
+	Page<User> getUsers(UserQueryParams userQueryParams);
 }

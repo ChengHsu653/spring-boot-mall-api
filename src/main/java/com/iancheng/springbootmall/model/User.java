@@ -66,8 +66,8 @@ public class User implements UserDetails{
     
     @Transient
     private String accessToken;
-    
-  
+
+
     @Override
     public String getPassword() {
         return password;
