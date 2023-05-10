@@ -32,7 +32,7 @@ spring:
         registration:
           google:
             client-id: 890240672665-0ekocfscjdvchcne1ttnmiloit77v1ra.apps.googleusercontent.com
-            client-secret:
+            client-secret: client-secret
 application:
   host-url: https://d934-27-53-248-234.ngrok-free.app
   client-url: http://127.0.0.1:5500

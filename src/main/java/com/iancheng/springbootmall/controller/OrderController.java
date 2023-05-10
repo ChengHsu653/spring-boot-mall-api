@@ -24,12 +24,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class OrderController {
 
-	private final OrderService orderService;
+    private final OrderService orderService;
 
-	@Autowired
+    @Autowired
     public OrderController(OrderService orderService) {
-		this.orderService = orderService;
-	}
+        this.orderService = orderService;
+    }
 
 
     @Tag(name = "getOrders")
@@ -54,43 +54,43 @@ public class OrderController {
         pageUtil.setPage(orderListPage.getPageable().getPageNumber());
         pageUtil.setTotal(orderListPage.getTotalElements());
         pageUtil.setTotalPages(orderListPage.getTotalPages());
-        
+
         return ResponseEntity.status(HttpStatus.OK).body(pageUtil);
     }
 
     @Tag(name = "createOrder")
     @PostMapping("/users/{userId}/orders")
     public ResponseEntity<Order> createOrder(
-    		@PathVariable Integer userId,
+            @PathVariable Integer userId,
             @RequestBody @Valid CreateOrderRequest createOrderRequest
     ) {
         Integer orderId = orderService.createOrder(userId, createOrderRequest);
 
         Order order = orderService.getOrderById(orderId);
- 
+
         return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
-    
+
     @Tag(name = "checkout")
     @PostMapping("/users/{userId}/orders/{orderId}")
     public ResponseEntity<String> checkout(
-    		@PathVariable Integer userId,
-    		@PathVariable Integer orderId				
+            @PathVariable Integer userId,
+            @PathVariable Integer orderId
     ) {
         String allPayAPIForm = orderService.checkout(userId, orderId);
-    	
+
         return ResponseEntity.status(HttpStatus.OK).body(allPayAPIForm);
     }
-    
+
     @Tag(name = "callback")
-	@RequestMapping(value="/callback",
-    				method=RequestMethod.POST,
-    				consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-	public void callback(
-			@RequestBody MultiValueMap<String, String> formData
-	) {
-    	orderService.callback(formData);
-	}
+    @RequestMapping(value="/callback",
+            method=RequestMethod.POST,
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public void callback(
+            @RequestBody MultiValueMap<String, String> formData
+    ) {
+        orderService.callback(formData);
+    }
 
     @Tag(name = "getAllOrders")
     @GetMapping("/users/all/orders")

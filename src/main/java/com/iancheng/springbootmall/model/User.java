@@ -3,75 +3,56 @@ package com.iancheng.springbootmall.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.iancheng.springbootmall.constant.Role;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.annotations.Proxy;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-@Proxy(lazy = false)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
-@Table(name = "`user`")
 public class User implements UserDetails{
-
-	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "user_id")
-    private Integer userId;
-	
-	@Column(name = "email")
-    private String email;
+	private Integer userId;
 
-    @JsonIgnore
-    @Column(name = "password")
-    private String password;
-    
-    @Column(name = "user_name")
-    private String userName;
+	private String email;
 
-    @Column(name = "created_date")
+	@JsonIgnore
+	private String password;
+
+	private String fullName;
+
 	private Date createdDate;
-    
-    @Column(name = "last_modified_date")
-    private Date lastModifiedDate;
-    
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role")
-    private Role role;
-    
-    @OneToMany(mappedBy = "user")
-    private List<Token> tokens;
-    
-    @OneToMany(mappedBy = "user")
-    private List<Order> orders;
-    
-    @Transient
-    private String refreshToken;
-    
-    @Transient
-    private String accessToken;
+
+	private Date lastModifiedDate;
+
+	@Enumerated(EnumType.STRING)
+	private Role role;
+
+	@Transient
+	private String refreshToken;
+
+	@Transient
+	private String accessToken;
 
 
-    @Override
-    public String getPassword() {
-        return password;
-    }
+	@Override
+	public String getPassword() {
+		return password;
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -103,71 +84,4 @@ public class User implements UserDetails{
 		return true;
 	}
 
-	public Integer getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Integer userId) {
-		this.userId = userId;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public Date getLastModifiedDate() {
-		return lastModifiedDate;
-	}
-
-	public void setLastModifiedDate(Date lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-	}
-
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getRefreshToken() {
-		return refreshToken;
-	}
-
-	public void setRefreshToken(String refreshToken) {
-		this.refreshToken = refreshToken;
-	}
-
-	public String getAccessToken() {
-		return accessToken;
-	}
-
-	public void setAccessToken(String accessToken) {
-		this.accessToken = accessToken;
-	}
 }

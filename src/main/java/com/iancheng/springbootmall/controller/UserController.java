@@ -34,7 +34,7 @@ public class UserController {
 		this.userService = userService;
 	}
 
-	
+
 	@Tag(name = "register")
 	@PostMapping("/users/register")
 	public ResponseEntity<User> register(
@@ -54,7 +54,7 @@ public class UserController {
 
 		return ResponseEntity.status(HttpStatus.OK).body(user);
 	}
-	
+
 	@Tag(name = "logout")
 	@GetMapping("/users/logout")
 	public ResponseEntity<?> logout() {

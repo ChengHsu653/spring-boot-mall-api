@@ -23,7 +23,6 @@ import com.iancheng.springbootmall.service.ProductService;
 import com.iancheng.springbootmall.util.PageUtil;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
@@ -34,14 +33,14 @@ import jakarta.validation.constraints.Min;
 public class ProductController {
 
     private final ProductService productService;
-    
+
     @Autowired
     public ProductController(ProductService productService) {
-		this.productService = productService;
-	}
-    
+        this.productService = productService;
+    }
 
-	@Tag(name = "getProducts")
+
+    @Tag(name = "getProducts")
     @GetMapping("/products")
     public ResponseEntity<PageUtil<Product>> getProducts(
             // 查詢條件 Filtering
@@ -80,7 +79,7 @@ public class ProductController {
     @Tag(name = "getProduct")
     @GetMapping("/products/{productId}")
     public ResponseEntity<Product> getProduct(
-    		@PathVariable Integer productId
+            @PathVariable Integer productId
     ) {
         Product product = productService.getProductById(productId);
 
@@ -91,9 +90,9 @@ public class ProductController {
     @Tag(name = "createProduct")
     @PostMapping("/products")
     public ResponseEntity<Product> createProduct(
-    		@ModelAttribute ProductRequest productRequest
+            @ModelAttribute ProductRequest productRequest
     ) {
-    	Product product = productService.createProduct(productRequest);
+        Product product = productService.createProduct(productRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(product);
     }
@@ -101,10 +100,10 @@ public class ProductController {
     @Tag(name = "updateProduct")
     @PutMapping("/products/{productId}")
     public ResponseEntity<Product> updateProduct(
-    		@PathVariable Integer productId,
+            @PathVariable Integer productId,
             @ModelAttribute ProductRequest productRequest
     ) {
-        // 檢查 product 是否存在	
+        // 檢查 product 是否存在
         Product product = productService.getProductById(productId);
 
         if (product == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -124,12 +123,12 @@ public class ProductController {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-    
+
     @Tag(name = "getProductCategories")
     @GetMapping("/products/categories")
     public ResponseEntity<ProductCategory[]> getProductCategories() {
-    	ProductCategory[] ProductCategories = productService.getProductCategories();
-    	
+        ProductCategory[] ProductCategories = productService.getProductCategories();
+
         return ResponseEntity.status(HttpStatus.OK).body(ProductCategories);
     }
 }

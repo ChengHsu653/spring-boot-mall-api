@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
         user.setEmail(userRegisterRequest.getEmail());
         user.setPassword(passwordEncoder.encode(userRegisterRequest.getPassword()));
-        user.setUserName(userRegisterRequest.getUserName());
+        user.setFullName(userRegisterRequest.getUserName());
         user.setRole(Role.ROLE_UNVERIFIED);
         
         Date now = new Date();
@@ -249,7 +249,7 @@ public class UserServiceImpl implements UserService {
             user = new User();
 
             user.setEmail(oAuth20LoginParams.getEmail());
-            user.setUserName(oAuth20LoginParams.getName());
+            user.setFullName(oAuth20LoginParams.getName());
             user.setRole(Role.ROLE_MEMBER);
 
             Date now = new Date();
