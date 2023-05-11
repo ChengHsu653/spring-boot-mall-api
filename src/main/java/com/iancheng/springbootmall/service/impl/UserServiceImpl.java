@@ -12,16 +12,9 @@ import com.iancheng.springbootmall.repository.UserRepository;
 import com.iancheng.springbootmall.service.EmailService;
 import com.iancheng.springbootmall.service.JwtService;
 import com.iancheng.springbootmall.service.UserService;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,10 +26,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
-
-	private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
@@ -63,7 +59,6 @@ public class UserServiceImpl implements UserService {
            log.warn("該 email {} 已經被註冊", userRegisterRequest.getEmail());
            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-
         // 創建帳號
         User user = new User();
 
@@ -78,7 +73,7 @@ public class UserServiceImpl implements UserService {
         user.setLastModifiedDate(now);
 
         User savedUser = userRepository.save(user);
-        
+
         // 產生 JWT
         String jwtToken = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
@@ -94,9 +89,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    private boolean emailExists(String email) {
-        return userRepository.findByEmail(email).isPresent();
-    }
+
     
     private void saveUserToken(User user, String jwtToken) {
     	Token token = new Token();
@@ -242,7 +235,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User oauth20Login(OAuth20LoginParams oAuth20LoginParams) {
-        User user = null;
+        User user;
         // 檢查註冊的 email
         if (!emailExists(oAuth20LoginParams.getEmail())) {
             // 創建帳號
@@ -287,6 +280,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll(pageable);
     }
 
-
-
+    private boolean emailExists(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
 }
