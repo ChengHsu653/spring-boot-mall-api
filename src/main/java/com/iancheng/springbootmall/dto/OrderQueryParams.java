@@ -1,34 +1,12 @@
 package com.iancheng.springbootmall.dto;
 
+import lombok.Data;
+
+@Data
 public class OrderQueryParams {
 
     private Integer userId;
     private Integer size;
     private Integer page;
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-	public Integer getSize() {
-		return size;
-	}
-
-	public void setSize(Integer size) {
-		this.size = size;
-	}
-
-	public Integer getPage() {
-		return page;
-	}
-
-	public void setPage(Integer page) {
-		this.page = page;
-	}
-
     
 }
