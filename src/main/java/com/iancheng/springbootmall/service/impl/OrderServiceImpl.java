@@ -1,5 +1,29 @@
 package com.iancheng.springbootmall.service.impl;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
+import ecpay.payment.integration.AllInOne;
+import ecpay.payment.integration.domain.AioCheckOutALL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.iancheng.springbootmall.constant.PaymentStatus;
 import com.iancheng.springbootmall.dto.BuyItem;
 import com.iancheng.springbootmall.dto.CreateOrderRequest;
@@ -13,33 +37,11 @@ import com.iancheng.springbootmall.repository.OrderRepository;
 import com.iancheng.springbootmall.repository.ProductRepository;
 import com.iancheng.springbootmall.repository.UserRepository;
 import com.iancheng.springbootmall.service.OrderService;
-import ecpay.payment.integration.AllInOne;
-import ecpay.payment.integration.domain.AioCheckOutALL;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
-@Slf4j
 @Service
 public class OrderServiceImpl implements OrderService {
 
+    private static final Logger log = LoggerFactory.getLogger(OrderServiceImpl.class);
     
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
@@ -73,10 +75,12 @@ public class OrderServiceImpl implements OrderService {
             log.warn("該 userId {} 不存在", orderQueryParams.getUserId());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
+        
     	Pageable pageable = PageRequest.of(
     			orderQueryParams.getPage(),
     			orderQueryParams.getSize()
     	);
+    	
     	User user = userRepository.findById(orderQueryParams.getUserId()).orElseThrow();
 
         return orderRepository.findAllByUserOrderByCreatedDateDesc(user, pageable);
@@ -96,22 +100,22 @@ public class OrderServiceImpl implements OrderService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         
-        BigDecimal totalAmount = new BigDecimal(0);
+        BigDecimal totalAmount = BigDecimal.valueOf(0);
         List<OrderItem> orderItems = new ArrayList<>();
 
         for (BuyItem buyItem: createOrderRequest.getBuyItems()) {
+            Product product = productRepository.getReferenceById(buyItem.getProductId());
+
             // 檢查 product 是否存在、庫存是否足夠
-            if (!productExists(buyItem.getProductId())) {
+            if (product == null) {
                 log.warn("商品 {} 不存在", buyItem.getProductId());
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-            }
-            Product product = productRepository.findById(buyItem.getProductId()).orElseThrow();
-
-            if (product.getStock() < buyItem.getQuantity()) {
+            } else if (product.getStock() < buyItem.getQuantity()) {
                 log.warn("商品 {} 庫存數量不足，無法購買。剩餘庫存 {}，欲購買數量 {}",
                         buyItem.getProductId(), product.getStock(), buyItem.getQuantity());
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
+
             // 扣除商品庫存
             product.setStock(product.getStock() - buyItem.getQuantity());
             product = productRepository.save(product);
@@ -154,9 +158,7 @@ public class OrderServiceImpl implements OrderService {
         return order.getOrderId();
     }
 
-
-
-    @Override
+	@Override
 	public String checkout(Integer userId, Integer orderId) {
 		// 檢查 user 是否存在
         if (!userExists(userId)) {
@@ -169,6 +171,7 @@ public class OrderServiceImpl implements OrderService {
             log.warn("該 orderId {} 不存在", orderId);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
+       
         User user = userRepository.findById(userId).orElseThrow();
         
         // 檢查此 order 屬於此 user
@@ -252,10 +255,6 @@ public class OrderServiceImpl implements OrderService {
     private boolean userExists(Integer userId) {
 		return userRepository.existsById(userId);
 	}
-
-    private boolean productExists(Integer productId) {
-        return productRepository.existsById(productId);
-    }
 	
 	private boolean orderExists(Integer orderId) {
 		return orderRepository.existsById(orderId);

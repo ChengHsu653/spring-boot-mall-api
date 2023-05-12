@@ -1,12 +1,11 @@
 package com.iancheng.springbootmall.service.impl;
 
-import com.iancheng.springbootmall.constant.ProductCategory;
-import com.iancheng.springbootmall.dto.ProductQueryParams;
-import com.iancheng.springbootmall.dto.ProductRequest;
-import com.iancheng.springbootmall.model.Product;
-import com.iancheng.springbootmall.repository.ProductRepository;
-import com.iancheng.springbootmall.service.ProductService;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.util.Date;
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,13 +15,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.Optional;
+import com.iancheng.springbootmall.constant.ProductCategory;
+import com.iancheng.springbootmall.dto.ProductQueryParams;
+import com.iancheng.springbootmall.dto.ProductRequest;
+import com.iancheng.springbootmall.model.Product;
+import com.iancheng.springbootmall.repository.ProductRepository;
+import com.iancheng.springbootmall.service.ProductService;
 
-@Slf4j
 @Service
 public class ProductServiceImpl implements ProductService {
+
+	private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
+	 
 	private final ProductRepository productRepository;
 
 	@Autowired
@@ -80,6 +84,7 @@ public class ProductServiceImpl implements ProductService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+    	
     	product.setPrice(productRequest.getPrice());
     	product.setStock(productRequest.getStock());
     	product.setDescription(productRequest.getDescription());
@@ -109,6 +114,7 @@ public class ProductServiceImpl implements ProductService {
 			} catch (IOException e) {
     			e.printStackTrace();
     		}
+            
             product.setPrice(productRequest.getPrice());
             product.setStock(productRequest.getStock());
             product.setDescription(productRequest.getDescription());

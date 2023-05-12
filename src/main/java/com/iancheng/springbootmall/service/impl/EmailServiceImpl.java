@@ -1,7 +1,8 @@
 package com.iancheng.springbootmall.service.impl;
 
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -15,9 +16,11 @@ import com.iancheng.springbootmall.service.EmailService;
 
 import jakarta.mail.internet.MimeMessage;
 
-@Slf4j
+
 @Service
 public class EmailServiceImpl implements EmailService{
+	
+	private static final Logger log = LoggerFactory.getLogger(EmailServiceImpl.class);
 
 	private final JavaMailSender javaMailSender;
 	
@@ -59,6 +62,7 @@ public class EmailServiceImpl implements EmailService{
             helper.setSubject("Spring Boot Mall 驗證郵件(請勿回傳)");
 
             javaMailSender.send(mimeMessage);
+            
             log.info("驗證郵件 Email {} 寄送成功!", user.getEmail());
         } catch (Exception e) {
         	log.error("驗證郵件 Email {} 寄送失敗!", user.getEmail());
@@ -89,10 +93,13 @@ public class EmailServiceImpl implements EmailService{
             helper.setSubject("Spring Boot Mall 重設密碼(請勿回傳)");
 
             javaMailSender.send(mimeMessage);
+            
             log.info("重設密碼 Email {} 寄送成功!", user.getEmail());
         } catch (Exception e) {
         	log.error("重設密碼 Email {} 寄送失敗!", user.getEmail());
         	throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+		
 	}
+
 }
