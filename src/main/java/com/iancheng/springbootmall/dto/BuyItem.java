@@ -5,7 +5,6 @@ import lombok.Data;
 
 @Data
 public class BuyItem {
-
     @NotNull
     private Integer productId;
 
