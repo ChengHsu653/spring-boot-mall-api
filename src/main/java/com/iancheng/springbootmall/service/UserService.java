@@ -22,7 +22,7 @@ public interface UserService {
 
 	void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
-    User oauth20Login(OAuth20LoginParams oAuth20LoginParams);
+    User oauth20Login(OAuth2LoginParams oAuth2LoginParams);
 
 	Page<User> getUsers(UserQueryParams userQueryParams);
 }

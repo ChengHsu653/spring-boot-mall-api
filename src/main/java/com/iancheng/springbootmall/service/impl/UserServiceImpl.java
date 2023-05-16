@@ -241,15 +241,15 @@ public class UserServiceImpl implements UserService {
 	}
 
     @Override
-    public User oauth20Login(OAuth20LoginParams oAuth20LoginParams) {
+    public User oauth20Login(OAuth2LoginParams oAuth2LoginParams) {
         User user = null;
         // 檢查註冊的 email
-        if (!emailExists(oAuth20LoginParams.getEmail())) {
+        if (!emailExists(oAuth2LoginParams.getEmail())) {
             // 創建帳號
             user = new User();
 
-            user.setEmail(oAuth20LoginParams.getEmail());
-            user.setFullName(oAuth20LoginParams.getName());
+            user.setEmail(oAuth2LoginParams.getEmail());
+            user.setFullName(oAuth2LoginParams.getName());
             user.setRole(Role.ROLE_MEMBER);
 
             Date now = new Date();
@@ -259,7 +259,7 @@ public class UserServiceImpl implements UserService {
 
             userRepository.save(user);
         } else {
-            user = userRepository.getByEmail(oAuth20LoginParams.getEmail());
+            user = userRepository.getByEmail(oAuth2LoginParams.getEmail());
             user.setLastModifiedDate(new Date());
             userRepository.save(user);
         }

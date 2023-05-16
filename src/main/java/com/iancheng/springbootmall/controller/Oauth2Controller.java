@@ -5,7 +5,7 @@ import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth20Service;
-import com.iancheng.springbootmall.dto.OAuth20LoginParams;
+import com.iancheng.springbootmall.dto.OAuth2LoginParams;
 import com.iancheng.springbootmall.model.User;
 import com.iancheng.springbootmall.service.UserService;
 import jakarta.servlet.http.Cookie;
@@ -50,12 +50,12 @@ public class Oauth2Controller {
         Response response = googleOAuth20Service.execute(request);
 
         JSONObject jsonObject = new JSONObject(response.getBody());
-        OAuth20LoginParams oAuth20LoginParams = new OAuth20LoginParams();
+        OAuth2LoginParams oAuth2LoginParams = new OAuth2LoginParams();
 
-        oAuth20LoginParams.setEmail(jsonObject.getString("email"));
-        oAuth20LoginParams.setName(jsonObject.getString("name"));
+        oAuth2LoginParams.setEmail(jsonObject.getString("email"));
+        oAuth2LoginParams.setName(jsonObject.getString("name"));
 
-        User user = userService.oauth20Login(oAuth20LoginParams);
+        User user = userService.oauth20Login(oAuth2LoginParams);
 
         Cookie cookie = new Cookie("token", user.getAccessToken());
         cookie.setMaxAge(86400);

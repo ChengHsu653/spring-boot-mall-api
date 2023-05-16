@@ -3,7 +3,7 @@ package com.iancheng.springbootmall.dto;
 import lombok.Data;
 
 @Data
-public class OAuth20LoginParams {
+public class OAuth2LoginParams {
 
     private String email;
 
